@@ -1,0 +1,55 @@
+.button{
+    font-size: 1.5rem;
+    display: inline-block;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all .5s,
+                color .3s;
+    color: black;
+    border: none;
+    font-family: "Evolventa", sans-serif;
+
+    &:active{
+        color: red !important;
+         scale: 0.9;
+    }
+    & p{
+        font-weight: bolder;
+    }
+
+
+    &__green{
+        background-color: rgb(23, 255, 23);
+        color: black;
+        &:hover{
+            background-color: rgb(0, 0, 0);
+            color: rgb(23, 255, 23);
+        }
+    }
+    &__yellow{
+        background-color: yellow;
+        &:hover{
+            background-color: rgb(0, 0, 0);
+            color: yellow;
+        }      
+    }
+    &__red{
+        background-color: red;
+        &:hover{
+            background-color: black;
+            color: red;
+        }
+    }
+
+
+    &:hover{
+        transform: scale(1.1);
+    border: none;
+    }
+}
+
+.testBtn{
+    &:active{
+        color: red;
+    }
+}

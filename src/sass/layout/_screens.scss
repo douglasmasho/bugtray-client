@@ -1,0 +1,24 @@
+.db{
+    &__logo{
+        width: 10rem;
+        @include center;
+        transition: all .3s;
+        animation: fadein .5s forwards;
+    }
+}
+
+.screen{
+    padding: 3rem 1rem;
+    min-height: 100vh;
+    animation: fadein .5s forwards;
+
+    &__header{
+        font-size: 3rem;
+        background-color:$red-primary;
+        text-transform: uppercase;
+        display: inline-block;
+        font-weight: bolder;
+        padding: 5px 10px;
+        margin-bottom: 4rem;
+    }
+}
