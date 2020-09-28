@@ -8,7 +8,7 @@ export default class AssignToDevs extends Component{
         const name = routeArgs.match.params.name;
         return (
             <div className="screen">
-                 <div className="center-hrz">
+                 {/* <div className="center-hrz">
                      <h1 className="screen__header u-margin-bottom white-text">{`Assign to developers - ${name}`}</h1>
                  </div>
                  <div className="center-hrz--col">
@@ -17,7 +17,7 @@ export default class AssignToDevs extends Component{
                     <MemberCard checkbox="visible" checkboxName="assignedDevs"/>
                     <MemberCard checkbox="visible" checkboxName="assignedDevs"/>
                     <MemberCard checkbox="visible" checkboxName="assignedDevs"/>
-                 </div>
+                 </div> */}
             </div>
         )
     }

@@ -5,6 +5,7 @@ import MemberCard from "./memberCard";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
+import { nanoid } from 'nanoid'
 
 
 const mapStateToProps = state=>({
@@ -54,8 +55,12 @@ class AddBugForm extends Component{
             this.errorText.current.style.display = "none";
             }, 3000)
         }else{
-            // console.log(this.state)
-            this.props.addBug({deadLine: new Date(this.state.deadline), name: this.state.projectName, id:2/*random unique number*/, title: this.state.bugTitle, status: "under review", devs: [ {name: "Asiya Yang", userPic:"someUrl", emailID: "something@somethingmail.com", userID:123}, {name: "Aiko Fatima", userPic:"someUrl", emailID: "some@somemail.com", userID: 312} ]});
+            const usersArr = selectedBoxes.map((el)=>{
+                                            return JSON.parse(el.dataset.userobj)
+                                        });
+            const id = nanoid(9);
+            // console.log(id)
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, id/*random unique number*/, teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr});
             this.props.history.push("/allBugs");
         }
 

@@ -9,7 +9,7 @@ export default class Bugs extends Component{
 
     render(){
     let {name, id, deadLine, title, status} = this.props.bugObj;
-    let formattedDate = `${deadLine.getDate()}-${deadLine.getMonth() + 1}-${deadLine.getFullYear()}`;
+    let formattedDate = deadLine;
     console.log(formattedDate);
         return (
         <div className="bugs--data row">

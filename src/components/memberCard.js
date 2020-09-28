@@ -9,7 +9,7 @@ import Rando from "../assets/rando.jpg"
                 <img src={Rando} alt="randomUser" className="memberCard--pic"/>
                  <p className="memberCard--name white-text">{this.props.dev.name}</p>
                 <div className="input-checkbox-group" style={{display: `${this.props.checkbox}`}}>
-                 <input type="checkbox" name={this.props.checkboxName} id={this.props.dev.userID} className="input-checkbox"/>
+                 <input type="checkbox" name={this.props.checkboxName} id={this.props.dev.userID} className="input-checkbox" data-userobj={JSON.stringify(this.props.dev)}/>
                             <label htmlFor={this.props.dev.userID}  className="input-checkbox-label">
                               <span className="input-checkbox-button"></span>
                             </label>
