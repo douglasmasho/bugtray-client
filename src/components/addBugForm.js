@@ -5,7 +5,7 @@ import MemberCard from "./memberCard";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-import { nanoid } from 'nanoid'
+import { nanoid } from 'nanoid';
 
 
 const mapStateToProps = state=>({
@@ -96,7 +96,7 @@ class AddBugForm extends Component{
                         </div>
 
                             {this.props.devs.map((dev,index)=>(
-                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={index} dev={dev}/>
+                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.userID} dev={dev}/>
                             ))}
 
 

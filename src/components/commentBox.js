@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Rando from "../assets/rando.jpg";
 import Button from "./button";
+import shortid from "shortid";
 
 
 export default class CommentBox extends Component{
@@ -18,7 +19,8 @@ export default class CommentBox extends Component{
         if(comment){
             const commentObj = {
                 id: projectname + id,
-                comment
+                comment,
+                commentID: shortid.generate(),
             }
             this.props.addComment(commentObj);
         }

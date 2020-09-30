@@ -23,8 +23,9 @@ export default class ManageBug extends Component{
 
         return(
                         <div className="screen">
-                            <div className="center-hrz u-margin-bottom-big">
-        <h1 className="screen__header u-margin-bottom white-text">Manage Bug: {name}({id})</h1> 
+                            <div className="center-hrz--col u-margin-bottom">
+                            <h1 className="screen__header u-margin-bottom white-text">Manage Bug</h1> 
+                             <h3 className="white-text normal-text u-margin-bottom-big">{name}: {id}</h3>
                             </div>
 
                             <div className="center-hrz--col">

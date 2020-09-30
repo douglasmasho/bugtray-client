@@ -19,7 +19,7 @@ export default class CommentPage extends Component{
                 {/* <Comment text="blablabla"/>
                 <Comment text="blablabla"/> */}
                 {
-                    newArr.map((comment, index)=>(<Comment key={index} text={comment.comment}/>))
+                    newArr.map((comment)=>(<Comment key={comment.commentID} text={comment.comment}/>))
                 }
                 <CommentBox  {...this.props}/>
             </div>

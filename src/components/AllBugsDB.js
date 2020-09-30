@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {connect} from "react-redux";
 import BugsHeader from "./bugsHeader";
 import Bugs from "./bugs";
 import {Link} from "react-router-dom"
 import Button from "./button";
+import {firestoreConnect} from "react-redux-firebase";
+import {compose} from "redux";
 
 
-const mapStateToProps = state=>({
-    bugs: state.bugs
-})
+
 const AllBugsDB = (props) => {
+    useEffect(()=>{
+        console.log(props.firestore1)
+        console.log("i rendered")
+    })
     return ( 
         <div className="screen">
         <div className="center-hrz">
@@ -21,9 +25,9 @@ const AllBugsDB = (props) => {
             {/* <Bugs bugObj={{deadLine: new Date("2020-05-10"),name: "DripFootwear", id:0}} />
             <Bugs bugObj={{deadLine: new Date("2020-09-30"),name: "Kronos", id:1}}/>
             <Bugs bugObj={{deadLine: new Date(),name: "Athena", id:2}}/> */}
-            {props.bugs.map((bug, index)=>(
-                <Bugs bugObj={bug} key={index}/>
-            ))}
+            {props.bugs1 ? props.bugs1.map((bug, index)=>(
+                <Bugs bugObj={bug} key={bug.id}/>
+            )): <p>No data</p>}
         </div>
         <div className="center-hrz">
         <Link to="/addBug"> <Button name="Add Bug (admins only)" specClasses="u-margin-top-big button__green"/> </Link> 
@@ -31,5 +35,18 @@ const AllBugsDB = (props) => {
     </div>
      );
 }
- 
-export default connect(mapStateToProps)(AllBugsDB);
+
+const mapStateToProps = state=>{
+    console.log(state.firestore)
+    return {
+        bugs: state.bugs,
+        bugs1: state.firestore.ordered.bugs
+    }
+}
+
+export default compose(
+    connect(mapStateToProps),
+    firestoreConnect([
+        {collection: "bugs"}
+    ]),
+    )(AllBugsDB);

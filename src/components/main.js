@@ -123,9 +123,9 @@ export default class Main extends Component{
                                 <h1 className="screen__header u-margin-bottom white-text">Developers</h1>
                             </div>  
                            <div className="center-hrz--col u-margin-top-big">
-                           {this.props.devs.map((dev, index)=>(
-                            <MemberCard checkbox="none" key={index} dev={dev}/>
-                            ))}
+                           {/* {this.props.devs.map((dev, index)=>(
+                            <MemberCard checkbox="none" key={index} dev={dev.id}/>
+                            ))} */}
                            </div>
                          </div>
                     )}/>

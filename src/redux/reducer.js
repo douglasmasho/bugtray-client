@@ -1,6 +1,6 @@
 import testArr from "../data/testArr";
 import {combineReducers} from "redux";
-import {firestoreReducer} from "redux-firestore";
+import { firestoreReducer } from "redux-firestore";
 
 function comments(state = [], action){
     switch(action.type){
