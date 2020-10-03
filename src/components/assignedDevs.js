@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
+// import {Link} from "react-router-dom";
 import MemberCard from "./memberCard";
 
 export default class AssignedDevs extends Component{

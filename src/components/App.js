@@ -4,6 +4,7 @@ import * as actions from "../redux/actions";
 import {bindActionCreators} from "redux";
 
 const mapStatetoProps = function(state){
+    console.log(state)
     return{
         testProp: state.test,
         comments: state.comments,

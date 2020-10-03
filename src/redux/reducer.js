@@ -1,6 +1,8 @@
 import testArr from "../data/testArr";
 import {combineReducers} from "redux";
 import { firestoreReducer } from "redux-firestore";
+import { firebaseReducer } from "react-redux-firebase";
+
 
 function comments(state = [], action){
     switch(action.type){
@@ -32,7 +34,7 @@ const bugs = (state = initBugs, action)=>{
 
 const myInitBugs = [
     {deadLine: "2020-05-10",name: "DripFootwear", id:0, title: "LocalStorage", status: "new"},
-    {deadLine: "2020-09-30",name: "Kronos", id:1, title:"Navigation", status: "fixed"},
+    {deadLine: "2020-09-30",name: "Kronos", id:2, title:"Navigation", status: "fixed"},
 ]
 
 const myBugs = (state = myInitBugs,action)=>{
@@ -54,6 +56,33 @@ const devs = (state=initUsers, action)=>{
     }
 }
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer})
+const initAuth = {
+    authError: null
+}
+
+const authReducer = (state=initAuth, action)=>{
+    switch(action.type){
+        case "SIGNIN_SUCCESS": 
+        console.log("Signin success");
+        return {
+            ...state,
+            authError: null
+        }
+        case "SIGNIN_ERROR":
+            console.log("signin error");
+            return {
+                ...state,
+                authError: action.error
+            }
+        case "SIGNOUT_SUCCESS":
+            console.log("Signed out successfully")
+            return state;
+        default: return state    
+    }
+}
+
+
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer})
 
 export default rootReducer;

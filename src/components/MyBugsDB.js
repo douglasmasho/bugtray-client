@@ -10,13 +10,14 @@ const mapStateToProps = state=>({
 })
 
 const MyBugsDB = (props) => {
+    console.log(props.myBugs)
     return ( 
         <div className="screen">
             <div className="center-hrz">
                <h1 className="screen__header u-margin-bottom white-text">My bugs</h1>
             </div>
             <BugsHeader/>
-            {props.myBugs.map(bug=>(<Bugs bugObj={bug} index={bug.id}/>))}
+            {props.myBugs.map(bug=>(<Bugs bugObj={bug} key={bug.id}/>))}
         </div>
      );
 }

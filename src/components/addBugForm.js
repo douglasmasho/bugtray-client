@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
-import Button from "./button";
+// import {Link} from "react-router-dom";
+// import Button from "./button";
 import MemberCard from "./memberCard";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-import { nanoid } from 'nanoid';
+// import { nanoid } from 'nanoid';
 
 
 const mapStateToProps = state=>({
@@ -58,9 +58,9 @@ class AddBugForm extends Component{
             const usersArr = selectedBoxes.map((el)=>{
                                             return JSON.parse(el.dataset.userobj)
                                         });
-            const id = nanoid(9);
+            // const id = nanoid(9);
             // console.log(id)
-            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, id/*random unique number*/, teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr});
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr});
             this.props.history.push("/allBugs");
         }
 
@@ -105,7 +105,7 @@ class AddBugForm extends Component{
                 </div>
                 <div className="center-hrz--col">
                 <p style={{display: "none"}} ref={this.errorText} className="bigger-text red-text u-margin-bottom">Please assign the bug to at least one dev</p>
-                  <input type="submit" className="button button__green " value="add bug"/>
+                  <input type="submit" className="button button__green" value="add bug"/>
                 </div>
             </form>
             </div>

@@ -1,16 +1,25 @@
-import React, {component, Component} from "react";
+import React, {Component} from "react";
 import btIcon from "../assets/bticon.svg";
 import Button from "./button";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import * as actionCreators from "../redux/actions";
 
 
-
-export default class HomePage extends Component{
+class HomePage extends Component{
     overlayRef = React.createRef(null);
     constructor(){
         super();
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.askId = this.askId.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.signIn = this.signIn.bind(this);
+
+    }
+    state = {
+        email: "",
+        password: "",
     }
 
     askId(type){
@@ -47,6 +56,26 @@ export default class HomePage extends Component{
             })
         })
     }
+    
+    logout(){
+        this.props.signOut();
+    }
+
+    handleChange(e){
+        // console.log(e.target.name);
+        console.log(this.props.authError)
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+        console.log(this.state)
+    }
+
+    signIn(e){
+        e.preventDefault();
+        // console.log(this.state)
+        this.props.signIn(this.state)
+    }
+
     render(){
         return(
             <div className="homePage">
@@ -56,8 +85,11 @@ export default class HomePage extends Component{
                                 <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
                                     this.openModal("login")
                                 }}/>
-                                <Button name="Sign Up" specClasses="button__green"callBack={(event)=>{
+                                <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
                                     this.openModal("signup")
+                                }}/>
+                                <Button name="Log Out" specClasses="button__red u-margin-right" callBack={e=>{
+                                    this.logout();
                                 }}/>
                             </div>
                  </div>
@@ -68,16 +100,17 @@ export default class HomePage extends Component{
                             <h2 className="modal-title blue-text normal-text">Log in</h2>
                      </div>
                      <div className="modal-body u-margin-bottom center-hrz--col u-margin-top">
-                         <form className="center-hrz--col" style={{width: "80%"}}>
+                         <form className="center-hrz--col" onSubmit={this.signIn} style={{width: "80%"}}>
                             <div className="input-group">
-                                <input type="text" className="input-text" id="login-email" placeholder="Email*" required/>
+                                <input type="text" className="input-text" id="login-email" name="email" placeholder="Email*"  onChange={this.handleChange} required/>
                                 <label htmlFor="login-email" className="input-label">Email</label>
                             </div>
                             <div className="input-group">
-                                <input type="text" className="input-text" id="login-password" placeholder="Passsword*" required/>
+                                <input type="password" className="input-text" id="login-password" name="password" placeholder="Passsword*" onChange={this.handleChange}  required/>
                                 <label htmlFor="login-password" className="input-label">Password</label>
                             </div>
-                            <input type="submit"  value="log in" className="button button__green"/>
+                              {this.props.authError ? <p className="red-text bigger-text">Username or password is wrong</p>: null}
+                            <input type="submit"   value="log in" className="button button__green"/>
                          </form>
                      </div>
                 </div>
@@ -125,3 +158,15 @@ export default class HomePage extends Component{
         )
     }
 }
+
+const mapDispatchToProps = dispatch=>{
+    return bindActionCreators(actionCreators, dispatch);
+}
+const mapStateToProps = state=>{
+    return {
+        authError: state.auth.authError
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
