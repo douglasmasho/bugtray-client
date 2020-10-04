@@ -8,7 +8,8 @@ const mapStatetoProps = function(state){
     return{
         testProp: state.test,
         comments: state.comments,
-        devs: state.devs
+        devs: state.devs,
+        auth: state.firebase.auth
     }
 }
 function bindDispatchToProps(dispatch){

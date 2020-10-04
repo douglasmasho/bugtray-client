@@ -10,9 +10,11 @@ import {Provider} from "react-redux";
 import App from "./components/App";
 import thunk from "redux-thunk";
 import {reduxFirestore, getFirestore, createFirestoreInstance} from "redux-firestore";
-import {ReactReduxFirebaseProvider, getFirebase} from "react-redux-firebase";
+import {ReactReduxFirebaseProvider, getFirebase, isLoaded} from "react-redux-firebase";
 import fbConfig from "./config/fbConfig";
 import firebase from "firebase/app";
+import {useSelector} from "react-redux";
+import {isLoded} from "react-redux-firebase";
 
 
 const store = createStore(rootReducer, compose(
@@ -29,13 +31,22 @@ const store = createStore(rootReducer, compose(
       };
       
 
+const AuthIsLoaded = props=>{
+    const {children} = props;
+    const auth = useSelector(state=>state.firebase.auth);
+    if(!isLoaded(auth)) return <div>Splash screen</div>
+    return children
+
+}
 
 ReactDOM.render(
      <Provider store={store}>
          <ReactReduxFirebaseProvider {...rrfProps} >
             <BrowserRouter>
                 <ScrollToTop/>
-                <App/>
+                <AuthIsLoaded>
+                  <App/>
+                </AuthIsLoaded>
             </BrowserRouter>
          </ReactReduxFirebaseProvider>
     </Provider>,

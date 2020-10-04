@@ -20,6 +20,8 @@ import HomePage from "./homePage";
 import ChangeStatus from "./changeStatus";
 import AllBugsDB from "./AllBugsDB";
 import MyBugsDB from "./MyBugsDB";
+import {Redirect} from "react-router-dom";
+
 
 
 
@@ -117,49 +119,82 @@ export default class Main extends Component{
 
                      <Route exact path="/myBugs" component={MyBugsDB}/> 
 
-                    <Route exact path="/developers" render={()=>(
-                         <div className="screen">
-                            <div className="center-hrz">
-                                <h1 className="screen__header u-margin-bottom white-text">Developers</h1>
-                            </div>  
-                           <div className="center-hrz--col u-margin-top-big">
-                           {/* {this.props.devs.map((dev, index)=>(
-                            <MemberCard checkbox="none" key={index} dev={dev.id}/>
-                            ))} */}
-                           </div>
-                         </div>
-                    )}/>
+                    <Route exact path="/developers" render={()=>{
+                            if(!this.props.auth.uid){
+                                return <Redirect to="/"/>
+                            }
+                        return ( <div className="screen">
+                        <div className="center-hrz">
+                            <h1 className="screen__header u-margin-bottom white-text">Developers</h1>
+                        </div>  
+                       <div className="center-hrz--col u-margin-top-big">
+                       {/* {this.props.devs.map((dev, index)=>(
+                        <MemberCard checkbox="none" key={index} dev={dev.id}/>
+                        ))} */}
+                       </div>
+                     </div>)
+                    }
+                           
 
-                    <Route extact path="/addBug" render={({history})=>(
-                        <div className="screen">
-                            <AddBugForm history={history} addBug={this.props.addBug}/>
-                        </div>
-                    )}/>
+                    }/>
 
-                    <Route exact path="/manageBug/:name/:id" render={(routeArgs)=>(
-                        <ManageBug routeArgs={routeArgs}/>
-                    )}/>
+                    <Route extact path="/addBug" render={({history})=>{
+                        if(!this.props.auth.uid){
+                                return <Redirect to="/"/>
+                         }
+                        return (<div className="screen">
+                        <AddBugForm history={history} addBug={this.props.addBug}/>
+                    </div>)
+                    }}/>
+
+                    <Route exact path="/manageBug/:name/:id" render={(routeArgs)=>{
+                        if(!this.props.auth.uid){
+                                 return <Redirect to="/"/>
+                        }
+                       return  <ManageBug routeArgs={routeArgs}/>
+                    }      
+                    }/>
 
 
-                    <Route exact path="/assignedDevs/:name?/:id?" render={(routeArgs)=>(
-                        <AssignedDevs routeArgs={routeArgs}/>
-                    )}/>
+                    <Route exact path="/assignedDevs/:name?/:id?" render={(routeArgs)=>{
+                         if(!this.props.auth.uid){
+                                     return <Redirect to="/"/>
+                            }
+                       return   <AssignedDevs routeArgs={routeArgs}/>   
+                    }
+                    }/>
 
-                    <Route exact path="/comments/:name?/:id?" render={(routeArgs)=>(
-                         <CommentPage  {...this.props} routeArgs={routeArgs}/>
-                    )}/>
+                    <Route exact path="/comments/:name?/:id?" render={(routeArgs)=>{
+                        if(!this.props.auth.uid){
+                                     return <Redirect to="/"/>
+                         }
+                       return   <CommentPage  {...this.props} routeArgs={routeArgs}/>   
+                    }
+                    }/>
 
-                    <Route exact path="/assignToDevs/:name" render={(routeArgs)=>(
-                        <AssignToDevs routeArgs={routeArgs}/>
-                    )}/>
+                    <Route exact path="/assignToDevs/:name" render={(routeArgs)=>{
+                        if(!this.props.auth.uid){
+                            return <Redirect to="/"/>
+                       }
+                      return  <AssignToDevs routeArgs={routeArgs}/>
+                    }
+                    }/>
 
-                    <Route exact path="/changeStatus/:name" render={(routeArgs)=>(
-                        <ChangeStatus routeArgs={routeArgs}/>
-                    )}/>
+                    <Route exact path="/changeStatus/:name" render={(routeArgs)=>{
+                            if(!this.props.auth.uid){
+                                    return <Redirect to="/"/>
+                             } 
+                       return   <ChangeStatus routeArgs={routeArgs}/>   
+                    }
+                    }/>
 
-                   <Route exact path="/screenshots/:name" render={(routeArgs)=>(
-                        <ScreenshotsPage routeArgs={routeArgs}/>
-                    )}/>
+                   <Route exact path="/screenshots/:name" render={(routeArgs)=>{
+                            if(!this.props.auth.uid){
+                                 return <Redirect to="/"/>
+                             } 
+                        return  <ScreenshotsPage routeArgs={routeArgs}/>
+                   }
+                    }/>
                 </div>
                 </div>
 

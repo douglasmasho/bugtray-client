@@ -6,6 +6,7 @@ import {Link} from "react-router-dom"
 import Button from "./button";
 import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
+import {Redirect} from "react-router-dom";
 
 
 
@@ -14,6 +15,9 @@ const AllBugsDB = (props) => {
         console.log(props.firestore1)
         console.log("i rendered")
     })
+    if(!props.auth.uid){
+        return <Redirect to="/"/>
+    }
     return ( 
         <div className="screen">
         <div className="center-hrz">
@@ -40,7 +44,8 @@ const mapStateToProps = state=>{
     console.log(state.firestore)
     return {
         bugs: state.bugs,
-        bugs1: state.firestore.ordered.bugs
+        bugs1: state.firestore.ordered.bugs,
+        auth: state.firebase.auth
     }
 }
 
