@@ -54,3 +54,28 @@ export const signOut = ()=>{
         })
     }
 }
+
+export const signUp = (newUser)=>{
+    return (dispatch, getState, {getFirestore, getFirebase})=>{
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+
+        firebase.auth().createUserWithEmailAndPassword(newUser.emailSU, newUser.passwordSU).then(
+            resp=>{
+                return firestore.collection("users").doc(resp.user.uid).set({
+                    name: newUser.nameSU,
+                    emailID: newUser.emailSU,
+                    teamID: newUser.teamIDSU,
+                    projects: [],
+                })
+            }
+        ).then(()=>{
+            dispatch({type: "SIGNUP_SUCCESS"});
+            console.log("success! :)")
+        }).catch(err=>{
+            dispatch({type: "SIGNUP_ERROR",err});
+            console.log("error :(")
+
+        })
+    }
+}

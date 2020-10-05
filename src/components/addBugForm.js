@@ -8,14 +8,6 @@ import {bindActionCreators} from "redux";
 // import { nanoid } from 'nanoid';
 
 
-const mapStateToProps = state=>({
-    devs: state.devs
-})
-
-const mapDispatchToProps = dispatch =>{
-    return bindActionCreators(actionCreators, dispatch)
-}
-
 
 
 class AddBugForm extends Component{
@@ -60,7 +52,7 @@ class AddBugForm extends Component{
                                         });
             // const id = nanoid(9);
             // console.log(id)
-            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr});
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr, createdAt: new Date(), author: this.props.profile.name});
             this.props.history.push("/allBugs");
         }
 
@@ -113,5 +105,16 @@ class AddBugForm extends Component{
         )
     }
 }
+
+
+const mapStateToProps = state=>({
+    devs: state.devs,
+    profile: state.firebase.profile
+})
+
+const mapDispatchToProps = dispatch =>{
+    return bindActionCreators(actionCreators, dispatch)
+}
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddBugForm);

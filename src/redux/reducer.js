@@ -58,7 +58,8 @@ const devs = (state=initUsers, action)=>{
 
 const initAuth = {
     authError: null,
-    loginSuccess: false
+    loginSuccess: false,
+    signupSuccess: false,
 }
 
 const authReducer = (state=initAuth, action)=>{
@@ -69,20 +70,38 @@ const authReducer = (state=initAuth, action)=>{
             ...state,
             authError: null,
             loginSuccess: true,
+            
         }
         case "SIGNIN_ERROR":
             console.log("signin error");
             return {
                 ...state,
-                authError: action.error,
+                authError: action.error.message,
                 loginSuccess: false,
+               signupSuccess: false,
+
             }
         case "SIGNOUT_SUCCESS":
             console.log("Signed out successfully")
             return {
                 ...state,
                 loginSuccess: false,
+                signupSuccess: false,
             }
+         case "SIGNUP_SUCCESS":
+            return {
+                ...state,
+                signupSuccess: true,
+            }
+         case "SIGNUP_ERROR":
+             return {
+                 ...state,
+                 authError: action.err.message,
+                 loginSuccess: false,
+                 signupSuccess: false,
+             }   
+         
+
         default: return state    
     }
 }

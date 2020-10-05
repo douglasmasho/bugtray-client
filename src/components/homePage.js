@@ -4,24 +4,34 @@ import Button from "./button";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as actionCreators from "../redux/actions";
+import { nanoid } from 'nanoid';
+            // const id = nanoid(9);
 
 
 class HomePage extends Component{
     overlayRef = React.createRef(null);
     logInMRef = React.createRef();
     signUpMRef = React.createRef();
+    signUpErrorRef = React.createRef();
+
     constructor(){
         super();
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.askId = this.askId.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeSU = this.handleChangeSU.bind(this);
         this.signIn = this.signIn.bind(this);
+        this.signUp = this.signUp.bind(this);
 
     }
     state = {
         email: "",
         password: "",
+        nameSU: "",
+        emailSU: "",
+        passwordSU: "",
+        teamIDSU: "",
     }
 
     askId(type){
@@ -31,6 +41,11 @@ class HomePage extends Component{
         if(type === "new"){
             idDiv.style.display = "none"
             //assign id to the new team using uuid
+            const id = nanoid(9);
+            console.log(id);
+            this.setState({
+                teamIDSU: id
+            })
         }else if(type === "existing"){
             idDiv.style.display = "block";
             idInp.required = true
@@ -78,10 +93,33 @@ class HomePage extends Component{
         console.log(this.state)
     }
 
+    handleChangeSU(e){
+        // console.log(e.target.name);
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+        console.log(this.state)
+    }
+
     signIn(e){
         e.preventDefault();
         // console.log(this.state)
         this.props.signIn(this.state);
+    }
+
+    signUp(e){
+        e.preventDefault();
+        const radios = Array.from(document.querySelectorAll(".radioSU"));
+        const checked = radios.filter(radio=> radio.checked === true);
+        if(checked.length !== 1){
+            this.signUpErrorRef.current.style.display = "block";
+            setTimeout(()=>{
+                this.signUpErrorRef.current.style.display = "none";
+             },3000)
+        }else{
+            // console.log(this.state);
+            this.props.signUp(this.state)
+        }
     }
 
 
@@ -90,25 +128,40 @@ class HomePage extends Component{
         
         if(prevState !== this.state){
         console.log(this.props.loginSuccess)
+        console.log(this.props.loginSuccess)
             if(this.props.loginSuccess){
                      this.closeModal("login");
-             }
+             }  
+             if(this.props.signupSuccess){
+                this.closeModal("login");
+            }
         }
+   
     }
     render(){
         const {auth} = this.props;
         console.log(this.props.loginSuccess)
         let buttons;
         if(auth.uid){
-          buttons =   <Button name="Log Out" specClasses="button__red u-margin-right" callBack={e=>{ this.logout(); }}/>
+          buttons =   (
+           <div className="center-hrz--col ">
+                 <div className="center-hrz--col u-margin-bottom-big">
+          <h1 className="screen__header u-margin-bottom-small white-text">{this.props.profile.name}</h1>
+                     <h3 className="white-text bigger-text">TeamID: {this.props.profile.teamID}</h3>
+                     <h3 className="white-text bigger-text">UserID: {this.props.auth.uid}</h3>
+                     <h3 className="white-text bigger-text">email: {this.props.profile.emailID}</h3>
+                </div>  
+              <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
+             </div>        
+            )
         }else{
             buttons = <>
-                                            <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
-                                    this.openModal("login")
-                                }}/>
-                                <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
-                                    this.openModal("signup")
-                                }}/>
+                    <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
+                             this.openModal("login")
+                     }}/>
+                        <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
+                                 this.openModal("signup")
+                         }}/>
             </>
         }
         console.log(auth)
@@ -138,7 +191,7 @@ class HomePage extends Component{
                      <div className="modal-body u-margin-bottom center-hrz--col u-margin-top">
                          <form className="center-hrz--col" onSubmit={this.signIn} style={{width: "80%"}}>
                             <div className="input-group">
-                                <input type="text" className="input-text" id="login-email" name="email" placeholder="Email*"  onChange={this.handleChange} required/>
+                                <input type="email" className="input-text" id="login-email" name="email" placeholder="Email*"  onChange={this.handleChange} required/>
                                 <label htmlFor="login-email" className="input-label">Email</label>
                             </div>
                             <div className="input-group">
@@ -159,32 +212,34 @@ class HomePage extends Component{
                         <h2 className="modal-title blue-text normal-text">Sign up</h2>
                     </div>
                     <div className="modal-body center-hrz--col u-margin-bottom">
-                         <form className="center-hrz--col" style={{width: "80%"}}>
+                        
+                         <form className="center-hrz--col" onSubmit={this.signUp} style={{width: "80%"}}>
                          <div className="input-group">
-                                <input type="text" className="input-text" id="signup-name" placeholder="Name*" required/>
+                                <input type="text" name="nameSU" className="input-text" id="signup-name" placeholder="Full Name*" required  onChange={this.handleChangeSU}/>
                                 <label htmlFor="signup-name" className="input-label">Name</label>
                             </div>
                             <div className="input-group">
-                                <input type="text" className="input-text" id="signup-email" placeholder="Email*" required/>
+                                <input type="email" name="emailSU" className="input-text" id="signup-email" placeholder="Email*" onChange={this.handleChangeSU} required/>
                                 <label htmlFor="signup-email" className="input-label">Email</label>
                             </div>
                             <div className="input-group">
-                                <input type="text" className="input-text" id="signup-passowrd" placeholder="Password*" required/>
+                                <input type="text" className="input-text" name="passwordSU" id="signup-passowrd" placeholder="Password*" onChange={this.handleChangeSU} required/>
                                 <label htmlFor="signup-passowrd" className="input-label">Password</label>
                             </div>
                             
                             <div className="radio-field u-margin-bottom">
-                                <input type="radio" name="user-team" id="new team" className="radio"/>
+                                <input type="radio" name="user-team" id="new team" className="radio radioSU"/>
                                 <label htmlFor="new team" className="radio-label" tabIndex="2" onClick={()=>{this.askId("new")}}>New Team</label>
-                                <input type="radio" name="user-team" id="exisiting-team" className="radio"/>
+                                <input type="radio" name="user-team" id="exisiting-team" className="radio radioSU"/>
                                 <label htmlFor="exisiting-team" className="radio-label" tabIndex="2" onClick={()=>{this.askId("existing")}}>existing team</label>
                             </div>
                             <div id="id-div" style={{display: "none"}}>
-                              <input type="text" className="input-text" id="team-id" placeholder="ID*"/>
+                              <input type="text" className="input-text" name="teamIDSU" id="team-id" placeholder="ID*" onChange={this.handleChangeSU}/>
                               <label htmlFor="team-id" className="input-label">ID</label>
                             </div>
-                            <input type="submit" value="log in" className="button button__green"/>
-                            
+                            <p className="red-text normal-text" style={{display: "none"}} ref={this.signUpErrorRef}>Please select one of the radio buttons</p>
+                            {this.props.authError ? <p className="red-text bigger-text">{this.props.authError}</p>: null}
+                            <input type="submit" value="sign up" className="button button__green"/> 
                          </form>
                     </div>
                 </div>
@@ -203,7 +258,9 @@ const mapStateToProps = state=>{
     return {
         authError: state.auth.authError,
         auth: state.firebase.auth,
-        loginSuccess: state.auth.loginSuccess
+        loginSuccess: state.auth.loginSuccess,
+        signupSuccess: state.auth.signupSuccess,
+       profile: state.firebase.profile,
     }
 }
 

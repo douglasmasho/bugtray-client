@@ -51,7 +51,5 @@ const mapStateToProps = state=>{
 
 export default compose(
     connect(mapStateToProps),
-    firestoreConnect([
-        {collection: "bugs"}
-    ]),
+    firestoreConnect(()=>["bugs"])
     )(AllBugsDB);
