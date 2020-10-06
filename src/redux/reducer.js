@@ -2,6 +2,8 @@ import testArr from "../data/testArr";
 import {combineReducers} from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
+import { nanoid } from 'nanoid';
+
 
 
 function comments(state = [], action){
@@ -116,8 +118,17 @@ const imageReducer = (state = initSrc, action)=>{
     }
 }
 
+const initStr = "";
+const imageUploadReducer = (state = initStr, action)=>{
+    switch(action.type){
+        case "UPOAD_SUCCESS":
+            return `${nanoid(9)}`
+         default: return state   
+    }
+}
 
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer})
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer})
 
 export default rootReducer;

@@ -93,7 +93,8 @@ export const uploadPic = ({file, uid})=>{
         const firebase = getFirebase();
         firebase.storage().ref(`users/${uid}/profile.jpg`).put(file).then((resp)=>{
             // console.log(resp)
-            getImage(uid);
+            dispatch({type: "UPLOAD_SUCCESS"})
+            window.location.reload();
         }) .catch((err)=>{
             console.log(err)
         })
@@ -102,10 +103,10 @@ export const uploadPic = ({file, uid})=>{
 
 export const getImage = (uid)=>{
     return (dispatch, geState, {getFirebase, getFirestore})=>{
+        console.log("qwertyuiop")
         const firebase = getFirebase();
         // console.log(uid)
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
-            console.log(resp);
             dispatch({type: "URL_SUCCESS", url: resp})
         }).catch(err=>{
             console.log(err)

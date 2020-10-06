@@ -4,9 +4,15 @@
         transition: all .3s;
         animation: fadein .5s forwards;
     }
-    &--profilePic{
+    &--profilePic--container{
         width: 30rem;
+        height: 30rem;
         border-radius: 500px;
+        overflow: hidden;
+    }
+    &--profilePic{
+        width: 100%;
+
     }
     &--div{
         @include center;

@@ -13,6 +13,7 @@ class HomePage extends Component{
     logInMRef = React.createRef();
     signUpMRef = React.createRef();
     signUpErrorRef = React.createRef();
+    imgRef = React.createRef();
 
     constructor(){
         super();
@@ -142,8 +143,15 @@ class HomePage extends Component{
                 this.props.getImage(this.props.auth.uid)
             }
         }
-   
+
+        // if(prevProps.imageUpload !== this.props.imageUpload){
+        //     console.log(this.imgRef.current.src);
+        //     console.log(this.props.imageSrc);
+        //     this.imgRef.current.src = ""
+        // }
+
     }
+    
     render(){
         const {auth} = this.props;
         console.log(this.props.loginSuccess)
@@ -151,10 +159,11 @@ class HomePage extends Component{
         if(auth.uid){
           buttons =   (
            <div style={{width: "100%"}}>
-                 <div className="row u-margin-bottom-big" style={{justifyContent: "space-evenly", minWidth: "80%", textAlign: "center"}}>
-                     <div className="center-hrz">
-                       <img className="homePage--profilePic u-margin-bottom-big" src={this.props.imageSrc} alt="logo"/>
+                 <div className="row u-margin-bottom-big" style={{justifyContent: "space-evenly", minWidth: "80%", textAlign: "center", alignItems: "center"}}>
+                     <div className="center-hrz homePage--profilePic--container" >
+                       <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/>
                      </div>
+                     <input type="file" onChange={this.uploadPic}/>
                      <div className="" style={{textAlign: "left"}}>
                          <div className="center-hrz">
                             <h1 className="screen__header u-margin-bottom-small white-text" style={{width: "100%", textAlign: "center"}}>{this.props.profile.name}</h1>
@@ -164,11 +173,11 @@ class HomePage extends Component{
                             <h3 className="bigger-text">UserID: {this.props.auth.uid}</h3>
                             <h3 className="bigger-text">email: {this.props.profile.emailID}</h3>
                         </div>
+                        <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
                      </div>
 
                 </div>  
-                <input type="file" onChange={this.uploadPic}/>
-              <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
+
              </div>        
             )
         }else{
@@ -282,8 +291,9 @@ const mapStateToProps = state=>{
         auth: state.firebase.auth,
         loginSuccess: state.auth.loginSuccess,
         signupSuccess: state.auth.signupSuccess,
-       profile: state.firebase.profile,
-       imageSrc: state.imageSrc
+         profile: state.firebase.profile,
+         imageSrc: state.imageSrc,
+         imageUpload: state.imageUpload
     }
 }
 
