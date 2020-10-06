@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {connect} from "react-redux";
 import BugsHeader from "./bugsHeader";
 import Bugs from "./bugs";
@@ -12,8 +12,8 @@ import {Redirect} from "react-router-dom";
 
 const AllBugsDB = (props) => {
     useEffect(()=>{
-        console.log(props.firestore1)
-        console.log("i rendered")
+        console.log(props.firestore1);
+        console.log("i rendered");
     })
     if(!props.auth.uid){
         return <Redirect to="/"/>
@@ -29,7 +29,7 @@ const AllBugsDB = (props) => {
             {/* <Bugs bugObj={{deadLine: new Date("2020-05-10"),name: "DripFootwear", id:0}} />
             <Bugs bugObj={{deadLine: new Date("2020-09-30"),name: "Kronos", id:1}}/>
             <Bugs bugObj={{deadLine: new Date(),name: "Athena", id:2}}/> */}
-            {props.bugs1 ? props.bugs1.map((bug, index)=>(
+            {props.bugs1 && props.profile ? props.bugs1.filter(bug=>bug.teamID === props.profile.teamID).map((bug, index)=>(
                 <Bugs bugObj={bug} key={bug.id}/>
             )): <p>No data</p>}
         </div>
@@ -41,11 +41,12 @@ const AllBugsDB = (props) => {
 }
 
 const mapStateToProps = state=>{
-    console.log(state.firestore)
+    console.log(state.firebase)
     return {
         bugs: state.bugs,
         bugs1: state.firestore.ordered.bugs,
-        auth: state.firebase.auth
+        auth: state.firebase.auth,
+        profile: state.firebase.profile
     }
 }
 

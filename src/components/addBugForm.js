@@ -52,7 +52,7 @@ class AddBugForm extends Component{
                                         });
             // const id = nanoid(9);
             // console.log(id)
-            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: 123,title: this.state.bugTitle, status: "under review", devs: usersArr, createdAt: new Date(), author: this.props.profile.name});
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "under review", devs: usersArr, createdAt: new Date(), author: this.props.profile.name});
             this.props.history.push("/allBugs");
         }
 

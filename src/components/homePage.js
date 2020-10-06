@@ -23,7 +23,7 @@ class HomePage extends Component{
         this.handleChangeSU = this.handleChangeSU.bind(this);
         this.signIn = this.signIn.bind(this);
         this.signUp = this.signUp.bind(this);
-
+        this.uploadPic = this.uploadPic.bind(this)
     }
     state = {
         email: "",
@@ -122,18 +122,24 @@ class HomePage extends Component{
         }
     }
 
-
+    uploadPic(e){
+        const file = e.currentTarget.files[0];
+        // console.log(this.props.auth.uid);
+        this.props.uploadPic({file, uid: this.props.auth.uid});
+    }
 
     componentDidUpdate(prevState, prevProps){
-        
+          
         if(prevState !== this.state){
-        console.log(this.props.loginSuccess)
-        console.log(this.props.loginSuccess)
+            console.log(this.props.imageSrc)
             if(this.props.loginSuccess){
                      this.closeModal("login");
              }  
              if(this.props.signupSuccess){
-                this.closeModal("login");
+                this.closeModal("signup");
+            }
+            if(this.props.auth){
+                this.props.getImage(this.props.auth.uid)
             }
         }
    
@@ -144,31 +150,47 @@ class HomePage extends Component{
         let buttons;
         if(auth.uid){
           buttons =   (
-           <div className="center-hrz--col ">
-                 <div className="center-hrz--col u-margin-bottom-big">
-          <h1 className="screen__header u-margin-bottom-small white-text">{this.props.profile.name}</h1>
-                     <h3 className="white-text bigger-text">TeamID: {this.props.profile.teamID}</h3>
-                     <h3 className="white-text bigger-text">UserID: {this.props.auth.uid}</h3>
-                     <h3 className="white-text bigger-text">email: {this.props.profile.emailID}</h3>
+           <div style={{width: "100%"}}>
+                 <div className="row u-margin-bottom-big" style={{justifyContent: "space-evenly", minWidth: "80%", textAlign: "center"}}>
+                     <div className="center-hrz">
+                       <img className="homePage--profilePic u-margin-bottom-big" src={this.props.imageSrc} alt="logo"/>
+                     </div>
+                     <div className="" style={{textAlign: "left"}}>
+                         <div className="center-hrz">
+                            <h1 className="screen__header u-margin-bottom-small white-text" style={{width: "100%", textAlign: "center"}}>{this.props.profile.name}</h1>
+                         </div>
+                        <div className="homePage--details">
+                            <h3 className=" bigger-text">TeamID: {this.props.profile.teamID}</h3>
+                            <h3 className="bigger-text">UserID: {this.props.auth.uid}</h3>
+                            <h3 className="bigger-text">email: {this.props.profile.emailID}</h3>
+                        </div>
+                     </div>
+
                 </div>  
+                <input type="file" onChange={this.uploadPic}/>
               <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
              </div>        
             )
         }else{
-            buttons = <>
-                    <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
-                             this.openModal("login")
-                     }}/>
-                        <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
-                                 this.openModal("signup")
-                         }}/>
-            </>
+            buttons = <div className="center-hrz--col u-margin-bottom-big">
+                        <img className="homePage--logo u-margin-bottom-big" src={btIcon} alt="logo"/>
+                        <div className="row homePage--row">
+                                <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
+                                    this.openModal("login")
+                            }}/>
+                                <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
+                                        this.openModal("signup")
+                                }}/>
+                        </div>
+
+            </div>
+
+            
         }
         console.log(auth)
         return(
             <div className="homePage">
                  <div className="center-hrz-col homePage--div" style={{width: "100%"}}>
-                        <img className="homePage--logo u-margin-bottom-big" src={btIcon} alt="logo"/>
                             <div className="row homePage--row">
                                 {/* <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
                                     this.openModal("login")
@@ -223,8 +245,8 @@ class HomePage extends Component{
                                 <label htmlFor="signup-email" className="input-label">Email</label>
                             </div>
                             <div className="input-group">
-                                <input type="text" className="input-text" name="passwordSU" id="signup-passowrd" placeholder="Password*" onChange={this.handleChangeSU} required/>
-                                <label htmlFor="signup-passowrd" className="input-label">Password</label>
+                                <input type="password" className="input-text" name="passwordSU" id="signup-passowrd" placeholder="Password*" onChange={this.handleChangeSU} required/>
+                                <label htmlFor="signup-passowrd" className="input-label">Password*</label>
                             </div>
                             
                             <div className="radio-field u-margin-bottom">
@@ -261,6 +283,7 @@ const mapStateToProps = state=>{
         loginSuccess: state.auth.loginSuccess,
         signupSuccess: state.auth.signupSuccess,
        profile: state.firebase.profile,
+       imageSrc: state.imageSrc
     }
 }
 
