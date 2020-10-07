@@ -114,6 +114,8 @@ const imageReducer = (state = initSrc, action)=>{
     switch(action.type){
         case "URL_SUCCESS":
             return action.url
+        case "RESET_PIC":
+            return initSrc    
          default: return state    
     }
 }

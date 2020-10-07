@@ -55,6 +55,12 @@ export const signOut = ()=>{
     }
 }
 
+export const resetPic = ()=>{
+    return (dipatch)=>{
+        dipatch({type:"RESET_PIC"})
+    }
+}
+
 export const signUp = (newUser)=>{
     let uid;
     return (dispatch, getState, {getFirestore, getFirebase})=>{
@@ -64,7 +70,7 @@ export const signUp = (newUser)=>{
         firebase.auth().createUserWithEmailAndPassword(newUser.emailSU, newUser.passwordSU).then(
             resp=>{
                 uid = resp.user.uid;
-                return firestore.collection("users").doc(resp.user.uid).set({
+                return firestore.collection("users").doc(uid).set({
                     name: newUser.nameSU,
                     emailID: newUser.emailSU,
                     teamID: newUser.teamIDSU,

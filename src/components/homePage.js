@@ -83,6 +83,7 @@ class HomePage extends Component{
     
     logout(){
         this.props.signOut();
+        this.props.resetPic();
     }
 
     handleChange(e){
@@ -144,11 +145,11 @@ class HomePage extends Component{
             }
         }
 
-        // if(prevProps.imageUpload !== this.props.imageUpload){
-        //     console.log(this.imgRef.current.src);
-        //     console.log(this.props.imageSrc);
-        //     this.imgRef.current.src = ""
-        // }
+        if(prevProps.imageUpload !== this.props.imageUpload){
+            if(this.props.imageSrc && this.imgRef.current){
+                this.imgRef.current.style.background = `url(${this.props.imageSrc})`
+            }
+        }
 
     }
     
@@ -159,21 +160,22 @@ class HomePage extends Component{
         if(auth.uid){
           buttons =   (
            <div style={{width: "100%"}}>
-                 <div className="row u-margin-bottom-big" style={{justifyContent: "space-evenly", minWidth: "80%", textAlign: "center", alignItems: "center"}}>
-                     <div className="center-hrz homePage--profilePic--container" >
-                       <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/>
-                     </div>
-                     <input type="file" onChange={this.uploadPic}/>
+                 <div className="row u-margin-bottom-big homePage--div2">
+                        <div className="center-hrz homePage--profilePic--container" style={{background: `url(${this.props.imgSrc})`}} ref={this.imgRef}>
+                           {/* <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/> */}
+                        </div>
+                        <button> Decoy</button>
+                        <input type="file" onChange={this.uploadPic}/>
                      <div className="" style={{textAlign: "left"}}>
                          <div className="center-hrz">
-                            <h1 className="screen__header u-margin-bottom-small white-text" style={{width: "100%", textAlign: "center"}}>{this.props.profile.name}</h1>
+                            <h1 className="screen__header white-text" style={{width: "100%", textAlign: "center", marginBottom: "0"}}>{this.props.profile.name}</h1>
                          </div>
                         <div className="homePage--details">
-                            <h3 className=" bigger-text">TeamID: {this.props.profile.teamID}</h3>
-                            <h3 className="bigger-text">UserID: {this.props.auth.uid}</h3>
-                            <h3 className="bigger-text">email: {this.props.profile.emailID}</h3>
+                            <p className=" bigger-text">TeamID: {this.props.profile.teamID}</p>
+                            <p className="bigger-text">UserID: {this.props.auth.uid}</p>
+                            <p className="bigger-text">email: {this.props.profile.emailID}</p>
+                            <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
                         </div>
-                        <Button name="Log Out" specClasses="button__red" callBack={e=>{ this.logout(); }}/>
                      </div>
 
                 </div>  
