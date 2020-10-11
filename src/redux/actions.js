@@ -61,7 +61,7 @@ export const resetPic = ()=>{
     }
 }
 
-export const signUp = (newUser)=>{
+export const signUp = (newUser,type)=>{
     let uid;
     return (dispatch, getState, {getFirestore, getFirebase})=>{
         const firebase = getFirebase();
@@ -82,6 +82,13 @@ export const signUp = (newUser)=>{
                 projectArr: [],
             })
         }).then(()=>{
+            switch(type){
+                case "new": return firestore.collection("teamUsers").doc(newUser.teamIDSU).set({
+                    projectArr: [uid],
+                })
+            }
+        })
+        .then(()=>{
             console.log(uid, "second then");
             dispatch({type: "SIGNUP_SUCCESS"});
             console.log("success! :)")

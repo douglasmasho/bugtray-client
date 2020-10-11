@@ -13,7 +13,6 @@ import {Redirect} from "react-router-dom";
 const AllBugsDB = (props) => {
     const teamBugsRef = useRef(null);
     const bugsIDsRef = useRef([]);
-    const bugsArrRef = useRef([]);
     const [bugsState, setBugsState] = useState([]);
 
     useEffect(()=>{
@@ -21,11 +20,8 @@ const AllBugsDB = (props) => {
 
         if(props.teamBugs && props.bugs){
             teamBugsRef.current = props.teamBugs[props.profile.teamID]
-            console.log(teamBugsRef.current);
             if(teamBugsRef.current){
                 bugsIDsRef.current = teamBugsRef.current.bugs;
-                // console.log(props.bugs1);
-
             }
         }
     })

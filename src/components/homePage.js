@@ -120,7 +120,8 @@ class HomePage extends Component{
              },3000)
         }else{
             // console.log(this.state);
-            this.props.signUp(this.state)
+        //   console.log(checked[0].value);
+            this.props.signUp(this.state,checked[0].value)
         }
     }
 
@@ -261,8 +262,8 @@ class HomePage extends Component{
                             </div>
                             
                             <div className="radio-field u-margin-bottom">
-                                <input type="radio" name="user-team" id="new team" className="radio radioSU"/>
-                                <label htmlFor="new team" className="radio-label" tabIndex="2" onClick={()=>{this.askId("new")}}>New Team</label>
+                                <input type="radio" name="user-team" id="new team" value="new" className="radio radioSU"/>
+                                <label htmlFor="new team" className="radio-label" value="existing" tabIndex="2" onClick={()=>{this.askId("new")}}>New Team</label>
                                 <input type="radio" name="user-team" id="exisiting-team" className="radio radioSU"/>
                                 <label htmlFor="exisiting-team" className="radio-label" tabIndex="2" onClick={()=>{this.askId("existing")}}>existing team</label>
                             </div>
