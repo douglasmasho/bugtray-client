@@ -15,8 +15,10 @@ export const addBug =(bug)=>{
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         //run firebase function here;
         const firestore = getFirestore();
+        ///use nanoid as bug id so that you can have acces to it in the second promise.
         firestore.collection("bugs").add({
             ...bug
+            ///also run another firestore promise to add the bug id to the teamBugs array
         }).then(()=>{
             dispatch({
                 type: "ADD_BUG",
@@ -82,6 +84,21 @@ export const signUp = (newUser)=>{
                 projectArr: [],
             })
         }).then(()=>{
+            switch(newUser.type){
+                case "new":
+                    return firestore.collection("teamBugs").doc(newUser.teamIDSU).set({
+                        bugs: []
+                    }).then(()=>{
+                        return firestore.collection("teamUsers").doc(newUser.teamIDSU).set({
+                            users: [uid]
+                        })
+                    })
+                    case "existing":
+                        return firestore.collection("teamUsers").doc(newUser.teamIDSU).update({
+                            users: firestore.FieldValue.arrayUnion(uid)
+                        })
+            }
+        }).then(()=>{
             console.log(uid, "second then");
             dispatch({type: "SIGNUP_SUCCESS"});
             console.log("success! :)")
@@ -115,7 +132,7 @@ export const getImage = (uid)=>{
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
             dispatch({type: "URL_SUCCESS", url: resp})
         }).catch(err=>{
-            console.log(err)
+            // console.log(err)
         })
     }
 }

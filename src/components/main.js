@@ -49,7 +49,7 @@ export default class Main extends Component{
                     e.addEventListener("click", this.closeNav);
                 })
             }else{
-                console.log("the media does not match");
+                // console.log("the media does not match");
             }
         }
 
