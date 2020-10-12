@@ -78,6 +78,9 @@ export const signUp = (newUser)=>{
                     teamID: newUser.teamIDSU,
                     userPic: ""
                 })
+
+
+                
             }
         ).then(()=>{
             return firestore.collection("userProjects").doc(uid).set({
