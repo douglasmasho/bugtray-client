@@ -33,6 +33,7 @@ class HomePage extends Component{
         emailSU: "",
         passwordSU: "",
         teamIDSU: "",
+        type: ""
     }
 
     askId(type){
@@ -45,11 +46,15 @@ class HomePage extends Component{
             const id = nanoid(9);
             console.log(id);
             this.setState({
-                teamIDSU: id
+                teamIDSU: id,
+                type: "new"
             })
         }else if(type === "existing"){
             idDiv.style.display = "block";
-            idInp.required = true
+            idInp.required = true;
+            this.setState({
+                type: "existing"
+            })
         }
 
     }
@@ -92,7 +97,6 @@ class HomePage extends Component{
         this.setState({
             [e.target.name]: e.target.value
         });
-        console.log(this.state)
     }
 
     handleChangeSU(e){
@@ -100,7 +104,6 @@ class HomePage extends Component{
         this.setState({
             [e.target.name]: e.target.value
         });
-        console.log(this.state)
     }
 
     signIn(e){
@@ -132,16 +135,14 @@ class HomePage extends Component{
     }
 
     componentDidUpdate(prevState, prevProps){
-          
         if(prevState !== this.state){
-            console.log(this.props.imageSrc)
             if(this.props.loginSuccess){
                      this.closeModal("login");
              }  
              if(this.props.signupSuccess){
                 this.closeModal("signup");
             }
-            if(this.props.auth){
+            if(this.props.auth.uid){
                 this.props.getImage(this.props.auth.uid)
             }
         }
@@ -156,7 +157,6 @@ class HomePage extends Component{
     
     render(){
         const {auth} = this.props;
-        console.log(this.props.loginSuccess)
         let buttons;
         if(auth.uid){
           buttons =   (
@@ -199,7 +199,6 @@ class HomePage extends Component{
 
             
         }
-        console.log(auth)
         return(
             <div className="homePage">
                  <div className="center-hrz-col homePage--div" style={{width: "100%"}}>

@@ -14,27 +14,25 @@ const AllBugsDB = (props) => {
     const teamBugsRef = useRef(null);
     const bugsIDsRef = useRef([]);
     const [bugsState, setBugsState] = useState([]);
-
     useEffect(()=>{
-        console.log("i rendered");
-
-        if(props.teamBugs && props.bugs){
-            teamBugsRef.current = props.teamBugs[props.profile.teamID]
-            if(teamBugsRef.current){
-                bugsIDsRef.current = teamBugsRef.current.bugs;
+        if(props.bugs && props.teamBugs && props.profile.teamID){
+            const bugIDs = props.teamBugs[props.profile.teamID].bugs;
+            console.log(bugIDs)
+            if(bugIDs){
+                setBugsState(bugIDs.map(id=>{
+                    return {
+                        ...props.bugs[id],
+                        id
+                    }
+                }))
             }
         }
-    })
+    }, [props.bugs,props.teamBugs,props.profile.teamID])
 
     useEffect(()=>{
-        setBugsState(bugsIDsRef.current.map(id=>{
-            return {
-                ...props.bugs[id],
-                id
-            }
-        }))
-        console.log(bugsState, "bugsstate")
-    }, [teamBugsRef.current])
+        console.log("i rendered")
+    })
+
     if(!props.auth.uid){
         return <Redirect to="/"/>
     }
@@ -62,7 +60,6 @@ const AllBugsDB = (props) => {
 }
 
 const mapStateToProps = state=>{
-    console.log(state.firebase)
     return {
         bugs: state.firestore.data.bugs,
         // bugs1: state.firestore.ordered.bugs,
@@ -72,7 +69,8 @@ const mapStateToProps = state=>{
     }
 }
 
-export default compose(
+export default React.memo(compose(
     connect(mapStateToProps),
     firestoreConnect(()=>["teamBugs", "bugs"])
-    )(AllBugsDB);
+)(AllBugsDB),()=>(false) );
+//true means that it will not re-render
