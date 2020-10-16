@@ -282,9 +282,9 @@ class HomePage extends Component{
         )
     }
 }
-
 const mapDispatchToProps = dispatch=>{
-    return bindActionCreators(actionCreators, dispatch);
+    
+return bindActionCreators(actionCreators, dispatch);
 }
 const mapStateToProps = state=>{
     return {

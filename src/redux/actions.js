@@ -77,10 +77,7 @@ export const signUp = (newUser)=>{
                     emailID: newUser.emailSU,
                     teamID: newUser.teamIDSU,
                     userPic: ""
-                })
-
-
-                
+                })           
             }
         ).then(()=>{
             return firestore.collection("userProjects").doc(uid).set({
@@ -128,7 +125,7 @@ export const uploadPic = ({file, uid})=>{
 }
 
 export const getImage = (uid)=>{
-    return (dispatch, geState, {getFirebase, getFirestore})=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
         console.log("qwertyuiop")
         const firebase = getFirebase();
         // console.log(uid)
@@ -139,6 +136,59 @@ export const getImage = (uid)=>{
         })
     }
 }
+
+
+export const getTeamBugs = (teamID)=>{
+    return (dispatch, getState, {getFirestore})=>{
+        const firestore = getFirestore();
+        let teamBugs = [];
+        // console.log(teamID)
+        firestore.collection("bugs").where("teamID", "==", teamID).get().then(querySnapshot=>{
+            querySnapshot.forEach(doc=>{
+                console.log(doc.id);
+                teamBugs.push({
+                    ...doc.data(),
+                    id: doc.id
+                })
+            })
+        }).then(()=>{
+            console.log(teamBugs);
+            dispatch({type: "GET_TEAMBUGS", teamBugs})
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+}
+
+
+export const getTeamUsers = (teamID)=>{
+    let teamUsers = [];
+    return (dispatch, getState, {getFirebase,getFirestore})=>{
+        const firestore = getFirestore();
+        const firebase = getFirebase();
+        firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
+            querySnapshot.docs.forEach((doc,index)=>{
+                console.log(doc.id);
+                return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
+                    teamUsers.push({
+                        ...doc.data(),
+                        id: doc.id,
+                        imgSrc: resp
+                    })
+                }).then(()=>{
+                    if(querySnapshot.size === teamUsers.length){
+                      dispatch({type: "GET_TEAMUSERS", teamUsers})
+
+                    }
+            
+                })
+            })
+        })
+    }
+}
+
+
+
 // export const getImage = (uid)=>{  
 //     return (dispatch, geState, {getFirebase, getFirestore})=>{
 //         console.log("qwertyuiop")

@@ -21,6 +21,7 @@ import ChangeStatus from "./changeStatus";
 import AllBugsDB from "./AllBugsDB";
 import MyBugsDB from "./MyBugsDB";
 import {Redirect} from "react-router-dom";
+import Developers from "./developers";
 
 
 
@@ -119,24 +120,7 @@ export default class Main extends Component{
 
                      <Route exact path="/myBugs" component={MyBugsDB}/> 
 
-                    <Route exact path="/developers" render={()=>{
-                            if(!this.props.auth.uid){
-                                return <Redirect to="/"/>
-                            }
-                        return ( <div className="screen">
-                        <div className="center-hrz">
-                            <h1 className="screen__header u-margin-bottom white-text">Developers</h1>
-                        </div>  
-                       <div className="center-hrz--col u-margin-top-big">
-                       {/* {this.props.devs.map((dev, index)=>(
-                        <MemberCard checkbox="none" key={index} dev={dev.id}/>
-                        ))} */}
-                       </div>
-                     </div>)
-                    }
-                           
-
-                    }/>
+                    <Route exact path="/developers" component={Developers}/>
 
                     <Route extact path="/addBug" render={({history})=>{
                         if(!this.props.auth.uid){

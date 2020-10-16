@@ -129,8 +129,28 @@ const imageUploadReducer = (state = initStr, action)=>{
     }
 }
 
+const initTeamBugs = [];
+
+const teamBugs = (state = initTeamBugs, action)=>{
+    switch(action.type){
+        case "GET_TEAMBUGS":
+            return action.teamBugs
+        default: return state
+    }
+}
+
+const initTeamUsers = [];
 
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer})
+const teamUsers = (state= initTeamUsers, action)=>{
+    switch(action.type){
+        case "GET_TEAMUSERS":
+            return action.teamUsers
+        default: return state
+    }
+}
+
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers})
 
 export default rootReducer;
