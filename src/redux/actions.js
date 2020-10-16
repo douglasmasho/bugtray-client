@@ -139,3 +139,16 @@ export const getImage = (uid)=>{
         })
     }
 }
+// export const getImage = (uid)=>{  
+//     return (dispatch, geState, {getFirebase, getFirestore})=>{
+//         console.log("qwertyuiop")
+//         const firebase = getFirebase();
+//         // console.log(uid)
+//         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
+//             dispatch({type: "URL_SUCCESS", url: resp})
+//         }).catch(err=>{
+//             // console.log(err)
+//         })
+//     }
+// }///do a getImage but for multiple users, instead of receiving a sgle UID, receive an array of UIDs, then forEach of the UIDs, get the profile pic urls, then push them into an array, Each item in the array will be an object, {UID,url}.
+// you can then dispatch this new array tot the reducer, where it becomes state. When reading the state in your application, Use the UIDs of the members to get the right URL from the array. 

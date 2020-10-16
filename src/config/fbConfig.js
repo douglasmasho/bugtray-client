@@ -3,8 +3,6 @@ import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
 
-
-
 var firebaseConfig = {
   apiKey: "AIzaSyAMaTvGRQakax2p-ZhaPwwoyWD90wmJhug",
   authDomain: "bugtray-b4725.firebaseapp.com",

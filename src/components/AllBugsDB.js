@@ -16,7 +16,8 @@ const AllBugsDB = (props) => {
     const bugsArrRef = useRef([]);
     const [bugsState, setBugsState] = useState([]);
     useEffect(()=>{
-        if(props.bugs && props.teamBugs && props.profile.teamID){
+        console.log(props.teamBugs, props.profile.teamID)
+        if(props.bugs && props.teamBugs && props.profile.teamID && props.teamBugs[props.profile.teamID]){
             const bugIDs = props.teamBugs[props.profile.teamID].bugs;
             console.log(bugIDs)
             if(bugIDs){
