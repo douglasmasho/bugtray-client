@@ -16,7 +16,7 @@ const Developers = (props) => {
     })
 
     useEffect(()=>{
-        if(props.profile.teamID){
+        if(props.profile.teamID && props.teamUsers.length === 0){
             props.getTeamUsers(props.profile.teamID)
         }
     },[props.profile])
@@ -26,13 +26,14 @@ const Developers = (props) => {
         }
         return ( 
             <div className="screen">
-                <div className="center-hrz">
+                <div className="center-hrz--col">
                     <h1 className="screen__header u-margin-bottom white-text">Developers</h1>
+                    <h3 className="white-text bigger-text u-margin-bottom">TeamID: {props.profile.teamID}</h3>
                 </div>  
                 <div className="center-hrz--col u-margin-top-big">
-                    {props.teamUsers.map((dev, index)=>(
+                    {props.teamUsers.length > 0 ? props.teamUsers.map((dev, index)=>(
                     <MemberCard checkbox="none" key={dev.id} dev={dev}/>
-                    ))}
+                    )): <p className="white-text">Loading</p>}
                 </div>
             </div>
         )

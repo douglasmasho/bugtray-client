@@ -23,6 +23,14 @@ class AddBugForm extends Component{
     componentDidMount(){
         console.log(this.props.addBug);
     }
+
+    componentDidUpdate(prevState, prevProps){
+        if(prevProps !== this.props){
+            if(this.props.profile.teamID && this.props.teamUsers.length === 0){
+                this.props.getTeamUsers(this.props.profile.teamID)
+            }
+        }
+    }
     state = {
         projectName: "",
         bugTitle: "",
@@ -49,9 +57,7 @@ class AddBugForm extends Component{
         }else{
             const usersArr = selectedBoxes.map((el)=>{
                                             return JSON.parse(el.dataset.userobj)
-                                        });
-            // const id = nanoid(9);
-            // console.log(id)
+                });
             this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "under review", devs: usersArr, createdAt: new Date(), author: this.props.profile.name});
             this.props.history.push("/allBugs");
         }
@@ -87,7 +93,7 @@ class AddBugForm extends Component{
                            <h2 className="u-margin-bottom white-text bigger-text">Assign to devs</h2>
                         </div>
 
-                            {this.props.devs.map((dev,index)=>(
+                            {this.props.teamUsers.map((dev,index)=>(
                                 <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.userID} dev={dev}/>
                             ))}
 
@@ -109,7 +115,8 @@ class AddBugForm extends Component{
 
 const mapStateToProps = state=>({
     devs: state.devs,
-    profile: state.firebase.profile
+    profile: state.firebase.profile,
+    teamUsers: state.teamUsers
 })
 
 const mapDispatchToProps = dispatch =>{
