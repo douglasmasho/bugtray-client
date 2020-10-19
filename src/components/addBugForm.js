@@ -22,13 +22,15 @@ class AddBugForm extends Component{
 
     componentDidMount(){
         console.log(this.props.addBug);
+
+        this.props.getImage(this.props.auth.uid);
     }
 
-    componentDidUpdate(prevState, prevProps){
+    componentDidUpdate(prevProps,prevState){
         if(prevProps !== this.props){
             if(this.props.profile.teamID && this.props.teamUsers.length === 0){
                 this.props.getTeamUsers(this.props.profile.teamID)
-            }
+            }        
         }
     }
     state = {
@@ -89,16 +91,22 @@ class AddBugForm extends Component{
                     </div>
 
                     <div className="center-hrz--col u-margin-top" style={{width: "100%"}}>
-                    <div className="center-hrz">
-                           <h2 className="u-margin-bottom white-text bigger-text">Assign to devs</h2>
-                        </div>
+                            <div className="center-hrz">
+                                <h2 className="u-margin-bottom white-text bigger-text">Assign to devs</h2>
+                            </div>
 
-                            {this.props.teamUsers.map((dev,index)=>(
-                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.userID} dev={dev}/>
-                            ))}
+                            {this.props.teamUsers.length > 0 ? this.props.teamUsers.map((dev,index)=>(
+                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.id} dev={dev}/>
+                            )) : <p className="white-text u-margin-bottom">Loading</p>}
+                    </div>
+
+                    <div className="comment--container--input u-margin-top-big">
+                        <img src={this.props.imageSrc} alt="user" className="comment--pic"/>
+                        <textarea name="new-comment" id="new-comment" cols="30" rows="10" placeholder="Write a brief description of the bug..."></textarea>
+                    </div>
 
 
-                 </div>
+
 
                 </div>
                 <div className="center-hrz--col">
@@ -116,7 +124,9 @@ class AddBugForm extends Component{
 const mapStateToProps = state=>({
     devs: state.devs,
     profile: state.firebase.profile,
-    teamUsers: state.teamUsers
+    teamUsers: state.teamUsers,
+    imageSrc: state.imageSrc,
+    auth: state.firebase.auth
 })
 
 const mapDispatchToProps = dispatch =>{

@@ -1,4 +1,5 @@
 import { getFirebase } from "react-redux-firebase";
+import UserIcon from "../assets/profile.jpg";
 
 export function addComment(comment){
     return (dispatch, getState)=>{
@@ -80,6 +81,15 @@ export const signUp = (newUser)=>{
                 })           
             }
         ).then(()=>{
+            fetch(UserIcon).then(resp=>{
+                return resp.blob()
+            }).then(blob=>{
+                return firebase.storage().ref(`users/${uid}/profile.jpg`).put(blob).then((resp)=>{
+                    dispatch({type: "UPLOAD_SUCCESS"})
+                })  
+            })
+        }).then(()=>{
+            console.log("surprise")
             return firestore.collection("userProjects").doc(uid).set({
                 projectArr: [],
             })
@@ -115,10 +125,9 @@ export const uploadPic = ({file, uid})=>{
         // console.log(file, uid)
         const firebase = getFirebase();
         firebase.storage().ref(`users/${uid}/profile.jpg`).put(file).then((resp)=>{
-            // console.log(resp)
             dispatch({type: "UPLOAD_SUCCESS"})
             window.location.reload();
-        }) .catch((err)=>{
+        }).catch((err)=>{
             console.log(err)
         })
     }
@@ -168,7 +177,7 @@ export const getTeamUsers = (teamID)=>{
         const firebase = getFirebase();
         firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
             querySnapshot.docs.forEach((doc,index)=>{
-                console.log(doc.id);
+                // console.log(doc.id);
                 return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
                     teamUsers.push({
                         ...doc.data(),
@@ -178,9 +187,7 @@ export const getTeamUsers = (teamID)=>{
                 }).then(()=>{
                     if(querySnapshot.size === teamUsers.length){
                       dispatch({type: "GET_TEAMUSERS", teamUsers})
-
                     }
-            
                 })
             })
         })

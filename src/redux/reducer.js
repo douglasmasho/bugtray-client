@@ -2,6 +2,7 @@ import testArr from "../data/testArr";
 import {combineReducers} from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
+import UserIcon from "../assets/profile.jpg";
 import { nanoid } from 'nanoid';
 
 
@@ -108,11 +109,12 @@ const authReducer = (state=initAuth, action)=>{
     }
 }
 
-const initSrc = "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43"
+const initSrc = UserIcon;
 
 const imageReducer = (state = initSrc, action)=>{
     switch(action.type){
         case "URL_SUCCESS":
+            console.log(action.url)
             return action.url
         case "RESET_PIC":
             return initSrc    
