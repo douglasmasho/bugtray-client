@@ -29,9 +29,12 @@ const AllBugsDB = (props) => {
     }
     return ( 
         <div className="screen">
-        <div className="center-hrz">
-        <h1 className="screen__header u-margin-bottom white-text">All bugs</h1>
-        </div>
+            <div className="center-hrz">
+                 <h1 className="screen__header u-margin-bottom white-text">All bugs</h1>  
+            </div>
+            <div className="center-hrz">
+        <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-bottom button__green"/> </Link> 
+        </div>  
             <BugsHeader/>
         {/* the components(array) that represent individual bugs will come here. */}
         <div>
@@ -40,7 +43,7 @@ const AllBugsDB = (props) => {
             ))}
         </div>
         <div className="center-hrz">
-        <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-top-big button__green"/> </Link> 
+        {/* <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-top-big button__green"/> </Link>  */}
         </div>  
     </div>
      );
@@ -53,7 +56,6 @@ const mapDispatchToProps = dispatch=>{
 const mapStateToProps = state=>{
     return {
         bugs: state.firestore.data.bugs,
-        // bugs1: state.firestore.ordered.bugs,
         auth: state.firebase.auth,
         profile: state.firebase.profile,
         teamBugs: state.teamBugs

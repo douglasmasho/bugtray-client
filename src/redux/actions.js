@@ -1,5 +1,6 @@
 import { getFirebase } from "react-redux-firebase";
 import UserIcon from "../assets/profile.jpg";
+import {nanoid} from "nanoid";
 
 export function addComment(comment){
     return (dispatch, getState)=>{
@@ -12,15 +13,60 @@ export function addComment(comment){
     }
 }
 
-export const addBug =(bug)=>{
+
+
+export const testAddPic = (file)=>{
+    return (dispatch,getState, {getFirebase, getFirestore})=>{
+        const firebase = getFirebase();
+        firebase.storage().ref("screenshots/someID/pic.jpg").put(file).then(()=>{
+            console.log("it worked")
+        }).catch("it didnt work")
+    }
+}
+export const addBug =(bug, xtra)=>{
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         //run firebase function here;
         const firestore = getFirestore();
+        const firebase = getFirebase();
+        let bugID;
+        const screenshotID = nanoid(12);
+        // console.log(bug.devs)
         ///use nanoid as bug id so that you can have acces to it in the second promise.
         firestore.collection("bugs").add({
             ...bug
             ///also run another firestore promise to add the bug id to the teamBugs array
+        })
+        .then((docRef)=>{
+            console.log(xtra);
+            bugID = docRef.id;
+            return firestore.collection("comments").doc(docRef.id).set({
+                authorID: xtra.uid,
+                comment: xtra.initComment
+            })
         }).then(()=>{
+           return  firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(xtra.initScreenshot).then(()=>{
+               console.log("it worked")
+           }).catch((e)=>{
+               console.log(e)
+           })
+        }).then(()=>{
+            return firestore.collection("screenshots").doc(screenshotID).set({
+                authorID: xtra.uid,
+                notes: xtra.notes
+            })
+        }).then(()=>{
+            bug.devs.forEach(dev=>{
+                firestore.collection("userProjects").doc(dev.id).update({
+                    projectArr: firestore.FieldValue.arrayUnion({
+                        ...bug,
+                        id: bugID
+                    })
+                }).then(()=>{
+                    console.log("it worked")
+                }).catch((e)=>{
+                    console.log(e)
+                })
+            })
             dispatch({
                 type: "ADD_BUG",
                 bug
@@ -154,14 +200,14 @@ export const getTeamBugs = (teamID)=>{
         // console.log(teamID)
         firestore.collection("bugs").where("teamID", "==", teamID).get().then(querySnapshot=>{
             querySnapshot.forEach(doc=>{
-                console.log(doc.id);
+                // console.log(doc.id);
                 teamBugs.push({
                     ...doc.data(),
                     id: doc.id
                 })
             })
         }).then(()=>{
-            console.log(teamBugs);
+            console.log("teamBugs");
             dispatch({type: "GET_TEAMBUGS", teamBugs})
         }).catch(err=>{
             console.log(err);
