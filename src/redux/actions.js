@@ -1,6 +1,9 @@
 import { getFirebase } from "react-redux-firebase";
 import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
+import io from "socket.io-client";
+
+const socket = io.connect("/");
 
 export function addComment(comment){
     return (dispatch, getState)=>{
@@ -30,8 +33,11 @@ export const addBug =(bug, xtra)=>{
         const firebase = getFirebase();
         let bugID;
         const screenshotID = nanoid(12);
-        // console.log(bug.devs)
+        console.log(bug)
         ///use nanoid as bug id so that you can have acces to it in the second promise.
+
+
+
         firestore.collection("bugs").add({
             ...bug
             ///also run another firestore promise to add the bug id to the teamBugs array
@@ -39,6 +45,7 @@ export const addBug =(bug, xtra)=>{
         .then((docRef)=>{
             console.log(xtra);
             bugID = docRef.id;
+            socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
             return firestore.collection("comments").doc(docRef.id).set({
                 authorID: xtra.uid,
                 comment: xtra.initComment
@@ -74,6 +81,9 @@ export const addBug =(bug, xtra)=>{
         }).catch(e=>{
             console.log(e)
         })
+
+
+
 
     }
 }
