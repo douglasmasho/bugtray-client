@@ -195,6 +195,7 @@ class HomePage extends Component{
 
              </div>        
             )
+            
         }else{
             buttons = <div className="center-hrz--col u-margin-bottom-big">
                         <img className="homePage--logo u-margin-bottom-big" src={btIcon} alt="logo"/>
