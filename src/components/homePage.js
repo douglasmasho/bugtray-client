@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as actionCreators from "../redux/actions";
 import { nanoid } from 'nanoid';
+import UserIcon from "../assets/profile.jpg";
             // const id = nanoid(9);
 
 
@@ -24,7 +25,7 @@ class HomePage extends Component{
         this.handleChangeSU = this.handleChangeSU.bind(this);
         this.signIn = this.signIn.bind(this);
         this.signUp = this.signUp.bind(this);
-        this.uploadPic = this.uploadPic.bind(this)
+        this.uploadPic = this.uploadPic.bind(this);
     }
     state = {
         email: "",
@@ -123,8 +124,7 @@ class HomePage extends Component{
              },3000)
         }else{
             // console.log(this.state);
-        //   console.log(checked[0].value);
-            this.props.signUp(this.state,checked[0].value)
+            this.props.signUp(this.state);
         }
     }
 
@@ -134,26 +134,38 @@ class HomePage extends Component{
         this.props.uploadPic({file, uid: this.props.auth.uid});
     }
 
-    componentDidUpdate(prevState, prevProps){
-        if(prevState !== this.state){
+
+    componentDidMount(){
+            if(this.props.auth.uid){
+                this.props.getImage(this.props.auth.uid);
+            }
+    }
+    componentDidUpdate(prevProps, prevState){
+        if(this.props.imageSrc && this.imgRef.current){
+            this.imgRef.current.style.background = `url(${this.props.imageSrc})`
+        }
+        console.log(this.props.auth.uid)
+
+        if(prevProps.auth.uid !== this.props.auth.uid){
             if(this.props.loginSuccess){
                      this.closeModal("login");
              }  
              if(this.props.signupSuccess){
                 this.closeModal("signup");
             }
-            if(this.props.auth.uid){
-                this.props.getImage(this.props.auth.uid)
-            }
+        }
+            
+        if(this.props.auth.uid !==  prevProps.auth.uid ){
+            this.props.getImage(this.props.auth.uid);
         }
 
-        if(prevProps.imageUpload !== this.props.imageUpload){
-            if(this.props.imageSrc && this.imgRef.current){
-                this.imgRef.current.style.background = `url(${this.props.imageSrc})`
-            }
-        }
+        // if(prevProps.imageUpload !== this.props.imageUpload){
+
+        // }
 
     }
+
+
     
     render(){
         const {auth} = this.props;
@@ -165,7 +177,7 @@ class HomePage extends Component{
                         <div className="center-hrz homePage--profilePic--container" style={{background: `url(${this.props.imgSrc})`}} ref={this.imgRef}>
                            {/* <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/> */}
                         </div>
-                        <button> Decoy</button>
+                        <button>Decoy</button>
                         <input type="file" onChange={this.uploadPic}/>
                      <div className="" style={{textAlign: "left"}}>
                          <div className="center-hrz">
@@ -283,9 +295,9 @@ class HomePage extends Component{
         )
     }
 }
-
 const mapDispatchToProps = dispatch=>{
-    return bindActionCreators(actionCreators, dispatch);
+    
+return bindActionCreators(actionCreators, dispatch);
 }
 const mapStateToProps = state=>{
     return {
@@ -293,9 +305,9 @@ const mapStateToProps = state=>{
         auth: state.firebase.auth,
         loginSuccess: state.auth.loginSuccess,
         signupSuccess: state.auth.signupSuccess,
-         profile: state.firebase.profile,
-         imageSrc: state.imageSrc,
-         imageUpload: state.imageUpload
+        profile: state.firebase.profile,
+        imageSrc: state.imageSrc,
+        imageUpload: state.imageUpload
     }
 }
 

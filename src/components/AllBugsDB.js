@@ -7,70 +7,64 @@ import Button from "./button";
 import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import {Redirect} from "react-router-dom";
+import * as actionCreators from "../redux/actions";
+import {bindActionCreators} from "redux";
 
 
 
 const AllBugsDB = (props) => {
-    const teamBugsRef = useRef(null);
-    const bugsIDsRef = useRef([]);
-    const [bugsState, setBugsState] = useState([]);
-    useEffect(()=>{
-        if(props.bugs && props.teamBugs && props.profile.teamID){
-            const bugIDs = props.teamBugs[props.profile.teamID].bugs;
-            console.log(bugIDs)
-            if(bugIDs){
-                setBugsState(bugIDs.map(id=>{
-                    return {
-                        ...props.bugs[id],
-                        id
-                    }
-                }))
-            }
-        }
-    }, [props.bugs,props.teamBugs,props.profile.teamID])
 
     useEffect(()=>{
-        console.log("i rendered")
+        console.log("i rendered");
     })
+
+    useEffect(()=>{
+        if(props.profile.teamID){
+            props.getTeamBugs(props.profile.teamID);
+        }
+    }, [props.profile])
 
     if(!props.auth.uid){
         return <Redirect to="/"/>
     }
     return ( 
         <div className="screen">
-        <div className="center-hrz">
-        <h1 className="screen__header u-margin-bottom white-text">All bugs</h1>
-        </div>
+            <div className="center-hrz">
+                 <h1 className="screen__header u-margin-bottom white-text">All bugs</h1>  
+            </div>
+            <div className="center-hrz">
+        <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-bottom button__green"/> </Link> 
+        </div>  
             <BugsHeader/>
         {/* the components(array) that represent individual bugs will come here. */}
         <div>
-            {/* <Bugs bugObj={{deadLine: new Date("2020-05-10"),name: "DripFootwear", id:0}} />
-            <Bugs bugObj={{deadLine: new Date("2020-09-30"),name: "Kronos", id:1}}/>
-            <Bugs bugObj={{deadLine: new Date(),name: "Athena", id:2}}/> */}
-            {bugsState.map((bug, index)=>(
+            {props.teamBugs.map((bug, index)=>(
                 <Bugs bugObj={bug} key={bug.id}/>
-            // <p key={bug.id}>{bug.id}</p>
             ))}
         </div>
         <div className="center-hrz">
-        <Link to="/addBug"> <Button name="Add Bug (admins only)" specClasses="u-margin-top-big button__green"/> </Link> 
+        {/* <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-top-big button__green"/> </Link>  */}
         </div>  
     </div>
      );
 }
 
+const mapDispatchToProps = dispatch=>{
+    return bindActionCreators(actionCreators, dispatch);
+}
+
 const mapStateToProps = state=>{
     return {
         bugs: state.firestore.data.bugs,
-        // bugs1: state.firestore.ordered.bugs,
         auth: state.firebase.auth,
         profile: state.firebase.profile,
-        teamBugs: state.firestore.data.teamBugs
+        teamBugs: state.teamBugs
     }
 }
 
-export default React.memo(compose(
-    connect(mapStateToProps),
+
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect(()=>["teamBugs", "bugs"])
-)(AllBugsDB),()=>(false) );
+)(AllBugsDB);
 //true means that it will not re-render

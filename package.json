@@ -1,6 +1,7 @@
 {
   "name": "bugtray",
   "version": "0.1.0",
+  "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -20,6 +21,7 @@
     "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
     "shortid": "^2.2.15",
+    "socket.io-client": "^2.3.1",
     "zooming": "^2.1.1"
   },
   "scripts": {

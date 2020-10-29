@@ -2,6 +2,7 @@ import testArr from "../data/testArr";
 import {combineReducers} from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
+import UserIcon from "../assets/profile.jpg";
 import { nanoid } from 'nanoid';
 
 
@@ -108,11 +109,12 @@ const authReducer = (state=initAuth, action)=>{
     }
 }
 
-const initSrc = "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43"
+const initSrc = UserIcon;
 
 const imageReducer = (state = initSrc, action)=>{
     switch(action.type){
         case "URL_SUCCESS":
+            console.log(action.url)
             return action.url
         case "RESET_PIC":
             return initSrc    
@@ -129,8 +131,28 @@ const imageUploadReducer = (state = initStr, action)=>{
     }
 }
 
+const initTeamBugs = [];
+
+const teamBugs = (state = initTeamBugs, action)=>{
+    switch(action.type){
+        case "GET_TEAMBUGS":
+            return action.teamBugs
+        default: return state
+    }
+}
+
+const initTeamUsers = [];
 
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer})
+const teamUsers = (state= initTeamUsers, action)=>{
+    switch(action.type){
+        case "GET_TEAMUSERS":
+            return action.teamUsers
+        default: return state
+    }
+}
+
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers})
 
 export default rootReducer;

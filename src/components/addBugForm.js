@@ -21,20 +21,48 @@ class AddBugForm extends Component{
 
 
     componentDidMount(){
-        console.log(this.props.addBug);
+        // console.log(this.props.addBug);
+        this.props.getImage(this.props.auth.uid);
+        if(this.props.profile.teamID && this.props.teamUsers.length === 0){
+            // console.log("something")
+            this.props.getTeamUsers(this.props.profile.teamID)
+        } 
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        // console.log(this.props.auth)
+        if(prevProps.profile !== this.props.profile){
+            if(this.props.profile.teamID && this.props.teamUsers.length === 0){
+                this.props.getTeamUsers(this.props.profile.teamID)
+            }        
+        }
     }
     state = {
         projectName: "",
         bugTitle: "",
         deadline: "",
         devObjs: [],
+        initComment: "",
+        initScreenshot: "",
+        notes: ""
+    }
+
+    uploadPic = e =>{
+        this.props.testAddPic(this.state.initScreenshot)
     }
 
     handleChange = e =>{
-        this.setState({
-            [e.target.id] : e.target.value
-        })
-        console.log(this.state)
+        if(e.target.id === "initScreenshot"){
+            this.setState({
+                initScreenshot: e.target.files[0]
+            })
+        }else{
+            this.setState({
+                [e.target.id] : e.target.value
+            })
+        }
+
+        // console.log(this.state)
     }
 
     addBug = (e)=>{
@@ -49,14 +77,14 @@ class AddBugForm extends Component{
         }else{
             const usersArr = selectedBoxes.map((el)=>{
                                             return JSON.parse(el.dataset.userobj)
-                                        });
-            // const id = nanoid(9);
-            // console.log(id)
-            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "under review", devs: usersArr, createdAt: new Date(), author: this.props.profile.name});
+                });
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "new", devs: usersArr, createdAt: new Date(), author: this.props.profile.name}, {initComment: this.state.initComment, initScreenshot: this.state.initScreenshot, uid: this.props.auth.uid, notes: this.state.notes});
             this.props.history.push("/allBugs");
         }
+    }
 
-
+    test = ()=>{
+        // console.log(this.state)
     }
 
     render(){
@@ -83,22 +111,34 @@ class AddBugForm extends Component{
                     </div>
 
                     <div className="center-hrz--col u-margin-top" style={{width: "100%"}}>
-                    <div className="center-hrz">
-                           <h2 className="u-margin-bottom white-text bigger-text">Assign to devs</h2>
-                        </div>
+                            <div className="center-hrz">
+                                <h2 className="u-margin-bottom white-text bigger-text">Assign to devs</h2>
+                            </div>
 
-                            {this.props.devs.map((dev,index)=>(
-                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.userID} dev={dev}/>
-                            ))}
+                            {this.props.teamUsers.length > 0 ? this.props.teamUsers.map((dev,index)=>(
+                                <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.id} dev={dev}/>
+                            )) : <p className="white-text u-margin-bottom">Loading</p>}
+                    </div>
 
+                    <div className="comment--container--input u-margin-top-big">
+                        <img src={this.props.imageSrc} alt="user" className="comment--pic"/>
+                        <textarea name="new-comment" id="initComment" cols="30" rows="10" placeholder="Write a brief description of the bug..." onChange={this.handleChange} required></textarea>
+                    </div>
+         
+                      <input type="file" id="initScreenshot" onChange={this.handleChange}/>
+                      <button onClick={this.uploadPic}>test</button>
 
-                 </div>
-
+                      {/* make sure that the input show when a file is not selected */}
+                      <div className="input-group">
+                         <input type="text" className="input-text" id="notes" placeholder="notes" onChange={this.handleChange}/>
+                         <label htmlFor="bug-title" className="input-label">Screenshot Notes</label>
+                    </div>
                 </div>
-                <div className="center-hrz--col">
+                <div className="center-hrz--col u-margin-top">
                 <p style={{display: "none"}} ref={this.errorText} className="bigger-text red-text u-margin-bottom">Please assign the bug to at least one dev</p>
                   <input type="submit" className="button button__green" value="add bug"/>
                 </div>
+                {/* <button onClick={this.test}>Test</button> */}
             </form>
             </div>
 
@@ -109,7 +149,10 @@ class AddBugForm extends Component{
 
 const mapStateToProps = state=>({
     devs: state.devs,
-    profile: state.firebase.profile
+    profile: state.firebase.profile,
+    teamUsers: state.teamUsers,
+    imageSrc: state.imageSrc,
+    auth: state.firebase.auth
 })
 
 const mapDispatchToProps = dispatch =>{

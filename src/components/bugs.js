@@ -10,7 +10,7 @@ export default class Bugs extends Component{
     render(){
     let {name, id, deadLine, title, status} = this.props.bugObj;
     let formattedDate = deadLine;
-    console.log(formattedDate);
+    // console.log(formattedDate);
         return (
         <div className="bugs--data row">
         <li className="white-text bugs--row row-8--child">
