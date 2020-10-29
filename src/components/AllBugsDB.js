@@ -43,7 +43,6 @@ const AllBugsDB = (props) => {
             ))}
         </div>
         <div className="center-hrz">
-        {/* <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-top-big button__green"/> </Link>  */}
         </div>  
     </div>
      );
