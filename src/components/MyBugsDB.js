@@ -35,7 +35,7 @@ const MyBugsDB = (props) => {
             <BugsHeader/>
     {props.myBugs  ? props.myBugs[0].projectArr.map(bug=>{
         const id = nanoid(9)
-    return <Bugs bugObj={bug} key={id}/>}) : <p>Loading...</p>}
+    return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>}
         </div>
      );
 }
