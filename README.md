@@ -5,7 +5,8 @@
 A Bug tracking Application.
 
 ## Important
-This is the client-side, the server side of the application is needed to run this. The server side code can be found [here]()
+This is the client-side, the server side of the application is needed to run this. The server side code can be found [here](https://github.com/douglasmasho/bugtray-server).
+
 This is a Work In Progress.
 
 ## Technologies used
