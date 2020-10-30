@@ -1,4 +1,20 @@
+# Bugtray (WIP)
+![Banner](./bugtray.jpg)
 
+## Description
+A Bug tracking Application.
+
+## Important
+This is the client-side, the server side of the application is needed to run this. The server side code can be found [here]()
+This is a Work In Progress.
+
+## Technologies used
+React, Redux-thunk, Firebase firestore, Firebase storage, Firebase auth, node.js, express, socket.io, sendgrid.
+
+
+
+
+-----------------------------------------------------------------
 
 ## Available Scripts
 
