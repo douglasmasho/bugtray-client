@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, createRef} from "react";
 // import {Link} from "react-router-dom";
 // import Button from "./button";
 import MemberCard from "./memberCard";
@@ -16,8 +16,9 @@ class AddBugForm extends Component{
         this.addBug = this.addBug.bind(this);
         // this.contAddBug = this.contAddBug(this)
        this.errorText = React.createRef();
-
     }
+
+    textAreaRef = createRef();
 
 
     componentDidMount(){
@@ -27,6 +28,13 @@ class AddBugForm extends Component{
             // console.log("something")
             this.props.getTeamUsers(this.props.profile.teamID)
         } 
+
+        this.textAreaRef.current.addEventListener('input', autoResize, false); 
+        function autoResize() { 
+        this.style.height = 'auto'; 
+        this.style.height = this.scrollHeight + 'px'; 
+        // props.middleDiv.scrollTo(0, props.middleDiv.scrollHeight);
+     } 
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -122,7 +130,7 @@ class AddBugForm extends Component{
 
                     <div className="comment--container--input u-margin-top-big">
                         <img src={this.props.imageSrc} alt="user" className="comment--pic"/>
-                        <textarea name="new-comment" id="initComment" cols="30" rows="10" placeholder="Write a brief description of the bug..." onChange={this.handleChange} required></textarea>
+                        <textarea name="new-comment" id="initComment"  placeholder="Write a brief description of the bug..." onChange={this.handleChange} required ref={this.textAreaRef}></textarea>
                     </div>
          
                       <input type="file" id="initScreenshot" onChange={this.handleChange}/>

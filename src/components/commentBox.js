@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, createRef} from "react";
 import {Link} from "react-router-dom";
 import Rando from "../assets/rando.jpg";
 import Button from "./button";
@@ -10,6 +10,8 @@ export default class CommentBox extends Component{
         super();
         this.postComment = this.postComment.bind(this);
     }
+
+    textAreaRef = createRef();
 
     postComment(){
         const {routeArgs} = this.props;
@@ -25,14 +27,23 @@ export default class CommentBox extends Component{
             this.props.addComment(commentObj);
         }
     }
+
+    componentDidMount(){
+        this.textAreaRef.current.addEventListener('input', autoResize, false); 
+        function autoResize() { 
+        this.style.height = 'auto'; 
+        this.style.height = this.scrollHeight + 'px'; 
+        // props.middleDiv.scrollTo(0, props.middleDiv.scrollHeight);
+     } 
+    }
     render(){
+
         
 
         return (
-            <div className="comment--container--input u-margin-top-big">
-                <img src={Rando} alt="user" className="comment--pic"/>
-                <textarea name="new-comment" id="new-comment" cols="30" rows="10" placeholder="add a comment"></textarea>
-                <Button name="add Comment" specClasses="button__green comment--button" callBack={()=>{
+            <div className="comment--container--input u-margin-top-big comment__bottom">
+                <textarea name="new-comment" id="new-comment" placeholder="add a comment" ref={this.textAreaRef}></textarea>
+                <Button name="Send" specClasses="button__green comment--button" callBack={()=>{
                     this.postComment()
                 }}/>
             </div>
