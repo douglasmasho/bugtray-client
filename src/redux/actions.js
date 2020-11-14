@@ -2,6 +2,7 @@ import { getFirebase } from "react-redux-firebase";
 import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
 import io from "socket.io-client";
+import { firestore } from "firebase";
 
 const socket = io.connect("/");
 
@@ -47,8 +48,12 @@ export const addBug =(bug, xtra)=>{
             bugID = docRef.id;
             socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
             return firestore.collection("comments").doc(docRef.id).set({
-                authorID: xtra.uid,
-                comment: xtra.initComment
+                // authorID: xtra.uid,
+                // comment: xtra.initComment,
+                comments: [{
+                    authorID: xtra.uid,
+                    comment: xtra.initComment
+                }],
             })
         }).then(()=>{
            return  firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(xtra.initScreenshot).then(()=>{
@@ -246,6 +251,16 @@ export const getTeamUsers = (teamID)=>{
                     }
                 })
             })
+        })
+    }
+}
+
+export const getBugDevs = (bugID)=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
+        const firestore = getFirestore();
+        firestore.collection("bugs").doc(bugID).get().then(doc=>{
+            const devs = doc.data().devs;
+            dispatch({type: "GET_BUGDEVS", devs});
         })
     }
 }

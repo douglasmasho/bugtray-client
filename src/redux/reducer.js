@@ -141,10 +141,7 @@ const teamBugs = (state = initTeamBugs, action)=>{
     }
 }
 
-const initTeamUsers = [];
-
-
-const teamUsers = (state= initTeamUsers, action)=>{
+const teamUsers = (state= [], action)=>{
     switch(action.type){
         case "GET_TEAMUSERS":
             return action.teamUsers
@@ -152,7 +149,16 @@ const teamUsers = (state= initTeamUsers, action)=>{
     }
 }
 
+const bugDevs = (state = [], action)=>{
+    switch(action.type){
+        case "GET_BUGDEVS":
+            console.log(action.devs)
+            return action.devs
+            default: return state
+    }
+}
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers})
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers, bugDevs})
 
 export default rootReducer;
