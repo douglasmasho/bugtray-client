@@ -22,7 +22,6 @@ class AddBugForm extends Component{
 
 
     componentDidMount(){
-        // console.log(this.props.addBug);
         this.props.getImage(this.props.auth.uid);
         if(this.props.profile.teamID && this.props.teamUsers.length === 0){
             // console.log("something")
@@ -38,6 +37,7 @@ class AddBugForm extends Component{
     }
 
     componentDidUpdate(prevProps,prevState){
+        console.log(this.props.profile.name);
         // console.log(this.props.auth)
         if(prevProps.profile !== this.props.profile){
             if(this.props.profile.teamID && this.props.teamUsers.length === 0){
@@ -86,7 +86,7 @@ class AddBugForm extends Component{
             const usersArr = selectedBoxes.map((el)=>{
                                             return JSON.parse(el.dataset.userobj)
                 });
-            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "new", devs: usersArr, createdAt: new Date(), author: this.props.profile.name}, {initComment: this.state.initComment, initScreenshot: this.state.initScreenshot, uid: this.props.auth.uid, notes: this.state.notes});
+            this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "new", devs: usersArr, createdAt: new Date(), author: this.props.profile.name}, {initComment: this.state.initComment, initScreenshot: this.state.initScreenshot, uid: this.props.auth.uid, notes: this.state.notes, name: this.props.profile.name});
             this.props.history.push("/allBugs");
         }
     }

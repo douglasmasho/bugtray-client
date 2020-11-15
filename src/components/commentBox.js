@@ -18,6 +18,7 @@ export default class CommentBox extends Component{
         const projectname = routeArgs.match.params.name;
         const comment = document.querySelector("#new-comment").value;
         const id = routeArgs.match.params.id;
+        this.textAreaRef.current.value = "";
         if(comment){
             const commentObj = {
                 id: projectname + id,

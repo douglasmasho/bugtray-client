@@ -32,27 +32,32 @@ export const addBug =(bug, xtra)=>{
         //run firebase function here;
         const firestore = getFirestore();
         const firebase = getFirebase();
-        let bugID;
+        let bugID, imgSrc;
         const screenshotID = nanoid(12);
-        console.log(bug)
+        console.log(bug);
         ///use nanoid as bug id so that you can have acces to it in the second promise.
 
-
-
-        firestore.collection("bugs").add({
-            ...bug
-            ///also run another firestore promise to add the bug id to the teamBugs array
+        ///first get the imageSrc
+    
+        // console.log(uid)
+        firebase.storage().ref(`users/${xtra.uid}/profile.jpg`).getDownloadURL().then(resp=>{
+            imgSrc = resp;
+            console.log(resp);
+            return  firestore.collection("bugs").add({
+                ...bug
+                ///also run another firestore promise to add the bug id to the teamBugs array
+            })
         })
         .then((docRef)=>{
             console.log(xtra);
             bugID = docRef.id;
             socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
             return firestore.collection("comments").doc(docRef.id).set({
-                // authorID: xtra.uid,
-                // comment: xtra.initComment,
                 comments: [{
                     authorID: xtra.uid,
-                    comment: xtra.initComment
+                    comment: xtra.initComment,
+                    imgSrc: `${imgSrc}`,
+                    authorName: xtra.name
                 }],
             })
         }).then(()=>{
@@ -194,7 +199,7 @@ export const uploadPic = ({file, uid})=>{
     }
 }
 
-export const getImage = (uid)=>{
+export const getImage = (uid)=>{ /////////////////////////////////////////////////////////////////////////////////////
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         console.log("qwertyuiop")
         const firebase = getFirebase();

@@ -64,6 +64,6 @@ const mapStateToProps = state=>{
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    firestoreConnect(()=>["teamBugs", "bugs"])
+    firestoreConnect(()=>["bugs"])
 )(AllBugsDB);
 //true means that it will not re-render
