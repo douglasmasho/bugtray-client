@@ -20,6 +20,7 @@ const MyBugsDB = (props) => {
         if(props.myBugs){
             console.log(props.myBugs[0].projectArr)
         }
+        console.log(props.data);
     })
     if(!props.auth.uid){
         return <Redirect to="/"/>
@@ -56,6 +57,7 @@ const mapStateToProps = state=>{
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect(props=>[
-        {collection: "userProjects", doc: props.auth.uid}
+        {collection: "userProjects", doc: props.auth.uid},
+        {collection: "comments"}
     ])
 )(MyBugsDB);

@@ -6,21 +6,32 @@ import { firestore } from "firebase";
 
 const socket = io.connect("/");
 
-export function addComment(comment){
-    return (dispatch, getState)=>{
-        console.log(comment);
-        dispatch({
-            type: "STRING",
-            comment: comment
+export function addComment(commentObj, bugID){
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
+        const firestore = getFirestore();
+        const firebase = getFirebase();
+        console.log(commentObj);
+        
+        firebase.storage().ref(`users/${commentObj.authorID}/profile.jpg`).getDownloadURL().then(resp=>{
+            return firestore.collection("comments").doc(bugID).update({
+                comments: firestore.FieldValue.arrayUnion({
+                    ...commentObj,
+                    imgSrc: `${resp}`
+                })
+            })
+        }).catch(e=>{
+            console.log(e)
         })
+        //first get the imgSrc
 
+        // firestore.collection()
     }
 }
 
 
 
 export const testAddPic = (file)=>{
-    return (dispatch,getState, {getFirebase, getFirestore})=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firebase = getFirebase();
         firebase.storage().ref("screenshots/someID/pic.jpg").put(file).then(()=>{
             console.log("it worked")
@@ -51,13 +62,16 @@ export const addBug =(bug, xtra)=>{
         .then((docRef)=>{
             console.log(xtra);
             bugID = docRef.id;
+            const commentID = nanoid(9)
             socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
             return firestore.collection("comments").doc(docRef.id).set({
                 comments: [{
                     authorID: xtra.uid,
                     comment: xtra.initComment,
                     imgSrc: `${imgSrc}`,
-                    authorName: xtra.name
+                    authorName: xtra.name,
+                    commentID,
+                    timeStamp: new Date()
                 }],
             })
         }).then(()=>{

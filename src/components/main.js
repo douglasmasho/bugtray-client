@@ -30,6 +30,7 @@ export default class Main extends Component{
     constructor(){
         super();
         this.linkClick = this.linkClick.bind(this);
+        this.scrollToBottom = this.scrollToBottom.bind(this);
     }
     linkClick(){
         let currentLink = document.querySelector(".activeLink");
@@ -96,8 +97,13 @@ export default class Main extends Component{
         closeNav.style.display = "none";
     }
 
-    render(){
+    dashboardRef = React.createRef();
+    
+    scrollToBottom(){
+        this.dashboardRef.current.scrollTo(0, this.dashboardRef.current.scrollHeight);
+    }
 
+    render(){
         return (
             <div className="home">
                 <div id="navigation">
@@ -107,7 +113,7 @@ export default class Main extends Component{
                       <BottomDiv/>
                 </div>
                 
-                <div id="dashboard">
+                <div id="dashboard" ref={this.dashboardRef}>
                 <img src={MenuIcon} className="nav--icon" id="nav--open" alt="" onClick={this.expandNav}/>
 
 
@@ -126,7 +132,8 @@ export default class Main extends Component{
                         if(!this.props.auth.uid){
                                 return <Redirect to="/"/>
                          }
-                        return (<div className="screen">
+                        return (
+                        <div className="screen">
                         <AddBugForm history={history} addBug={this.props.addBug}/>
                     </div>)
                     }}/>
@@ -152,7 +159,7 @@ export default class Main extends Component{
                         if(!this.props.auth.uid){
                                      return <Redirect to="/"/>
                          }
-                       return   <CommentPage  {...this.props} routeArgs={routeArgs}/>   
+                       return   <CommentPage  {...this.props} routeArgs={routeArgs}  scrollToBottom={this.scrollToBottom}/>   
                     }
                     }/>
 

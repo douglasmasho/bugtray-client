@@ -1,11 +1,14 @@
 import React, {Component, createRef} from "react";
-import {Link} from "react-router-dom";
-import Rando from "../assets/rando.jpg";
 import Button from "./button";
-import shortid from "shortid";
+import {nanoid} from "nanoid";
+import {connect} from "react-redux";
+import {firestoreConnect} from "react-redux-firebase";
+import {compose} from "redux";
+import * as actionCreators from "../redux/actions";
+import {bindActionCreators} from "redux";
 
 
-export default class CommentBox extends Component{
+class CommentBox extends Component{
     constructor(){
         super();
         this.postComment = this.postComment.bind(this);
@@ -21,11 +24,13 @@ export default class CommentBox extends Component{
         this.textAreaRef.current.value = "";
         if(comment){
             const commentObj = {
-                id: projectname + id,
                 comment,
-                commentID: shortid.generate(),
+                commentID: nanoid(9),
+                authorID: this.props.auth.uid,
+                authorName: this.props.profile.name,
+                timeStamp: new Date(),
             }
-            this.props.addComment(commentObj);
+            this.props.addComment(commentObj, id);
         }
     }
 
@@ -38,9 +43,6 @@ export default class CommentBox extends Component{
      } 
     }
     render(){
-
-        
-
         return (
             <div className="comment--container--input u-margin-top-big comment__bottom">
                 <textarea name="new-comment" id="new-comment" placeholder="add a comment" ref={this.textAreaRef}></textarea>
@@ -51,3 +53,20 @@ export default class CommentBox extends Component{
         )
     }
 }
+
+
+
+const mapDispatchToProps = dispatch =>{
+    return bindActionCreators(actionCreators, dispatch);
+}
+
+const mapStateToProps = state =>{
+    return {
+        auth: state.firebase.auth,
+        profile: state.firebase.profile,
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentBox);
+

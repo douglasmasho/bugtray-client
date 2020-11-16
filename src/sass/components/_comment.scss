@@ -40,6 +40,9 @@
     &--pic{
         border-radius: 50%;
         width: 9rem;
+        height: 9rem;
+        background-size: cover;
+        background-position: center;
         position: absolute;
         top: -3rem;
         left: -5rem;
