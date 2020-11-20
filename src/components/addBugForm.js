@@ -133,7 +133,7 @@ class AddBugForm extends Component{
                         <textarea name="new-comment" id="initComment"  placeholder="Write a brief description of the bug..." onChange={this.handleChange} required ref={this.textAreaRef}></textarea>
                     </div>
          
-                      <input type="file" id="initScreenshot" onChange={this.handleChange}/>
+                      <input type="file" id="initScreenshot" onChange={this.handleChange} required/>
                       <button onClick={this.uploadPic}>test</button>
 
                       {/* make sure that the input show when a file is not selected */}

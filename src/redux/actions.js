@@ -3,6 +3,7 @@ import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
 import io from "socket.io-client";
 import { firestore } from "firebase";
+import Screenshot from "../components/screenshot";
 
 const socket = io.connect("/");
 
@@ -43,7 +44,7 @@ export const addBug =(bug, xtra)=>{
         //run firebase function here;
         const firestore = getFirestore();
         const firebase = getFirebase();
-        let bugID, imgSrc;
+        let bugID, imgSrc, screenshotLink;
         const screenshotID = nanoid(12);
         console.log(bug);
         ///use nanoid as bug id so that you can have acces to it in the second promise.
@@ -75,15 +76,27 @@ export const addBug =(bug, xtra)=>{
                 }],
             })
         }).then(()=>{
-           return  firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(xtra.initScreenshot).then(()=>{
-               console.log("it worked")
+           return  firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(xtra.initScreenshot).then((resp)=>{
+               console.log("it worked", resp);
            }).catch((e)=>{
                console.log(e)
            })
+        }).then(()=>{ ///get the screenshot url
+           return firebase.storage().ref(`/screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL().then(resp=>{
+                screenshotLink = resp;
+            })
         }).then(()=>{
-            return firestore.collection("screenshots").doc(screenshotID).set({
-                authorID: xtra.uid,
-                notes: xtra.notes
+            console.log(screenshotLink)
+            return firestore.collection("screenshots").doc(bugID).set({
+               screenshots:[{
+                    screenshotID: screenshotID,
+                    authorID: xtra.uid,
+                    authorName: xtra.name,
+                    authorPic: `${imgSrc}`,
+                    notes: xtra.notes,
+                    screenshotSrc: `${screenshotLink}`,
+                    timeStamp: new Date(),
+                   }] 
             })
         }).then(()=>{
             bug.devs.forEach(dev=>{

@@ -11,7 +11,6 @@ import {bindActionCreators} from "redux";
 class CommentPage extends Component{
 
     componentDidUpdate(prevProps, prevState){
-        console.log(this.props.data);
         this.props.scrollToBottom();
     }
 
@@ -46,7 +45,7 @@ const mapStateToProps = state =>{
     return {
         auth: state.firebase.auth,
         profile: state.firebase.profile,
-        comments: state.firestore.ordered.comments,
+        comments: state.firestore.ordered.comments
     }
 }
 

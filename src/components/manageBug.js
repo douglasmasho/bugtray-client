@@ -42,7 +42,7 @@ class ManageBug extends Component{
                        <Link to={`/assignToDevs/${name}`}><Button name="Assign to Developers(admins only)" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Link to={`/changeStatus/${name}`}><Button name="Change status" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Link to={`/comments/${name}`}><Button name="Comments" specClasses="button__yellow u-margin-bottom"></Button></Link>
-                       <Link to={`/screenshots/${name}`}><Button name="Screenshots" specClasses="button__yellow u-margin-bottom"></Button></Link>
+                       <Link to={`/screenshots/${name}/${id}`}><Button name="Screenshots" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Button name="Delete Bug(admins only)" specClasses="button__red u-margin-bottom" callBack={this.deleteBug}></Button>
                     </div>
                 </div>

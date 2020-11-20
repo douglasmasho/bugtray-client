@@ -179,7 +179,7 @@ export default class Main extends Component{
                     }
                     }/>
 
-                   <Route exact path="/screenshots/:name" render={(routeArgs)=>{
+                   <Route exact path="/screenshots/:name/:id" render={(routeArgs)=>{
                             if(!this.props.auth.uid){
                                  return <Redirect to="/"/>
                              } 
