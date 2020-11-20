@@ -8,7 +8,7 @@ export default class Comments extends Component{
         return (
             <div className="comment--container">
                 {/* <img src={Rando} /> */}
-                <div className="comment--pic" style={{backgroundImage: `url(${this.props.authorPic})`}}></div>
+                <div className="comment--pic" style={{backgroundImage: `url(${this.props.imgSrc})`}}></div>
                 <p className="comment--title">{this.props.name} | <span> {moment(this.props.timeStamp.toDate()).calendar()}</span></p>
                 <div className="comment--text">
                   <p >{this.props.text}</p>

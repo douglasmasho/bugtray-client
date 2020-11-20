@@ -23,10 +23,42 @@ export function addComment(commentObj, bugID){
         }).catch(e=>{
             console.log(e)
         })
-        //first get the imgSrc
-
-        // firestore.collection()
     }
+}
+
+export function addScreenshot(screenshotObj, bugID, screenshotFile){
+    return (dispatch, getState, {getFirebase, getFirestore}) =>{
+        console.log(screenshotObj)
+        console.log(bugID)
+        const firestore = getFirestore();
+        const firebase = getFirebase();
+        const screenshotID = nanoid(12);
+        let screenshotSrc, authorPic;
+        //first upload the screenshot to firebase storage
+        firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile).then(()=>{   
+            return firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL()
+        }).then(resp=>{
+            screenshotSrc = resp;
+            console.log(resp)
+            return firebase.storage().ref(`users/${screenshotObj.authorID}/profile.jpg`).getDownloadURL()
+        }).then(resp=>{
+            console.log(resp)
+            return firestore.collection("screenshots").doc(bugID).update({
+                screenshots: firestore.FieldValue.arrayUnion({
+                    ...screenshotObj,
+                    authorPic: `${resp}`,
+                    screenshotSrc: `${screenshotSrc}`,
+                    screenshotID
+                })
+            })
+
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+
+    }
+
 }
 
 

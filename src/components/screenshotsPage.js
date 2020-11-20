@@ -11,12 +11,52 @@ import {bindActionCreators} from "redux";
 
 
 class ScreenshotsPage extends Component{
+    constructor(){
+        super();
+        this.handleChange = this.handleChange.bind(this);
+        this.addScreenshot = this.addScreenshot.bind(this);
+    }
+
+    state={
+        file: "",
+        notes: "",
+    }
+
+    handleChange(e){
+        if(e.target.id === "file"){
+            this.setState({
+                file: e.target.files[0],
+            })
+        }else{
+            this.setState({
+                [e.target.id]: e.target.value
+            })
+        }
+        console.log(this.state)
+    }
+
+    addScreenshot(e){
+        e.preventDefault();
+        console.log("panda")
+        this.props.addScreenshot(
+            {  
+                authorID: this.props.auth.uid,
+                authorName: this.props.profile.name,
+                notes: this.state.notes,
+                timeStamp: new Date()
+            }
+        ,this.props.routeArgs.match.params.id,
+        this.state.file
+        )
+    }
+
     componentDidMount(){
         mediumZoom('[data-zoomable]');
     }
 
     componentDidUpdate(){
-        console.log(this.props.screenshots)
+        // console.log(this.props.screenshots)
+        console.log(this.state.newScreenshot)
     }
 
     render(){
@@ -31,6 +71,13 @@ class ScreenshotsPage extends Component{
                    {
                       screenshotsArr.map(screenshot=> (<Screenshot key={screenshot.screenshotID} authorName={screenshot.authorName} timeStamp={screenshot.timeStamp} notes={screenshot.notes} screenshot={screenshot.screenshotSrc} authorPic={screenshot.authorPic}/>))
                    }
+                   <div className="screenshot--upload-div">
+                       <form action="" className="screenshot--upload-form" onSubmit={this.addScreenshot}>
+                            <input type="file" onChange={this.handleChange} id="file" required/>
+                            <input type="text"  placeholder="notes" onChange={this.handleChange} required id="notes"/>
+                            <button type="submit">Submit</button>
+                       </form>
+                   </div>
                </div>)
     }
 }

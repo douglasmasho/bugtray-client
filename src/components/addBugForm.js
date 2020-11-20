@@ -60,6 +60,7 @@ class AddBugForm extends Component{
     }
 
     handleChange = e =>{
+        
         if(e.target.id === "initScreenshot"){
             this.setState({
                 initScreenshot: e.target.files[0]
@@ -69,8 +70,7 @@ class AddBugForm extends Component{
                 [e.target.id] : e.target.value
             })
         }
-
-        // console.log(this.state)
+        console.log(this.state)
     }
 
     addBug = (e)=>{
