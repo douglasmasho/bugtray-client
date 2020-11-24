@@ -10,11 +10,7 @@ import UserIcon from "../assets/profile.jpg";
 
 
 class HomePage extends Component{
-    overlayRef = React.createRef(null);
-    logInMRef = React.createRef();
-    signUpMRef = React.createRef();
-    signUpErrorRef = React.createRef();
-    imgRef = React.createRef();
+
 
     constructor(){
         super();
@@ -26,6 +22,14 @@ class HomePage extends Component{
         this.signIn = this.signIn.bind(this);
         this.signUp = this.signUp.bind(this);
         this.uploadPic = this.uploadPic.bind(this);
+
+        this.overlayRef = React.createRef(null);
+        this.logInMRef = React.createRef();
+        this.signUpMRef = React.createRef();
+        this.signUpErrorRef = React.createRef();
+        this.imgRef = React.createRef();
+        this.idDivRef = React.createRef();
+        this.teamIDRef = React.createRef();
     }
     state = {
         email: "",
@@ -38,8 +42,8 @@ class HomePage extends Component{
     }
 
     askId(type){
-        const idDiv = document.getElementById("id-div");
-        const idInp = document.getElementById("team-id");
+        const idDiv = this.idDivRef.current
+        const idInp = this.teamIDRef.current;
         // console.log(idDiv);
         if(type === "new"){
             idDiv.style.display = "none"
@@ -62,7 +66,6 @@ class HomePage extends Component{
 
 
     closeModal(type){
-        // const modal = document.getElementById(`modal-${type}`);
         let modal;
         switch(type){
             case "login": modal = this.logInMRef.current;
@@ -279,8 +282,8 @@ class HomePage extends Component{
                                 <input type="radio" name="user-team" id="exisiting-team" className="radio radioSU"/>
                                 <label htmlFor="exisiting-team" className="radio-label" tabIndex="2" onClick={()=>{this.askId("existing")}}>existing team</label>
                             </div>
-                            <div id="id-div" style={{display: "none"}}>
-                              <input type="text" className="input-text" name="teamIDSU" id="team-id" placeholder="ID*" onChange={this.handleChangeSU}/>
+                            <div id="id-div" style={{display: "none"}} ref={this.idDivRef}>
+                              <input type="text" className="input-text" name="teamIDSU" id="team-id" placeholder="ID*" onChange={this.handleChangeSU} ref={this.teamIDRef}/>
                               <label htmlFor="team-id" className="input-label">ID</label>
                             </div>
                             <p className="red-text normal-text" style={{display: "none"}} ref={this.signUpErrorRef}>Please select one of the radio buttons</p>

@@ -15,12 +15,14 @@ class ScreenshotsPage extends Component{
         super();
         this.handleChange = this.handleChange.bind(this);
         this.addScreenshot = this.addScreenshot.bind(this);
+        this.progressRef = React.createRef();
     }
 
     state={
         file: "",
         notes: "",
     }
+
 
     handleChange(e){
         if(e.target.id === "file"){
@@ -55,9 +57,16 @@ class ScreenshotsPage extends Component{
     }
 
     componentDidUpdate(){
-        // console.log(this.props.screenshots)
-        console.log(this.state.newScreenshot)
+        this.progressRef.current.value = this.props.uploadPercentage;
+        console.log("i updated");
+        if(this.progressRef.current.value === 100){
+            setTimeout(()=>{
+                this.progressRef.current.value = 0
+            }, 2000)
+        }
+        this.props.scrollToBottom()
     }
+    
 
     render(){
         const {routeArgs} = this.props;
@@ -77,6 +86,7 @@ class ScreenshotsPage extends Component{
                             <input type="text"  placeholder="notes" onChange={this.handleChange} required id="notes"/>
                             <button type="submit">Submit</button>
                        </form>
+                       <progress value="0" max="100" id="uploader" ref={this.progressRef}></progress>
                    </div>
                </div>)
     }
@@ -90,7 +100,8 @@ const mapStateToProps = state=>{
     return {
         auth: state.firebase.auth,
         profile: state.firebase.profile,
-        screenshots: state.firestore.ordered.screenshots
+        screenshots: state.firestore.ordered.screenshots,
+        uploadPercentage:  state.uploadPercentage
     }
 }
 

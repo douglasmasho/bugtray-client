@@ -5,7 +5,7 @@ class ScrollToTop extends Component{
 
     componentDidUpdate(prevProps){
         if(this.props.location !== prevProps.location){
-            document.querySelector("#dashboard").scrollTo(0,0);
+            this.props.scrollToTop();
         }
     }
 

@@ -35,7 +35,19 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
         const screenshotID = nanoid(12);
         let screenshotSrc, authorPic;
         //first upload the screenshot to firebase storage
-        firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile).then(()=>{   
+        const uploadTask = firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile);
+
+        uploadTask.on("state_changed", snapshot=>{
+            let percentage = (snapshot.bytesTransferred/snapshot.totalBytes) * 100;
+            // console.log(document.querySelector("#uploader"))
+            dispatch({
+                type: "UPLOAD_PERCENTAGE",
+                percentage
+            })
+         });
+
+        uploadTask.then((resp)=>{ 
+            console.log(resp, "this must be the task right?")  ////////////////////////////////////////////////////////////////////////
             return firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL()
         }).then(resp=>{
             screenshotSrc = resp;
@@ -58,6 +70,8 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
         })
 
     }
+    
+
 
 }
 

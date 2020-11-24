@@ -49,7 +49,6 @@ ReactDOM.render(
      <Provider store={store}>
          <ReactReduxFirebaseProvider {...rrfProps} >
             <BrowserRouter>
-                <ScrollToTop/>
                 <AuthIsLoaded>
                   <App/>
                 </AuthIsLoaded>

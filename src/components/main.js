@@ -22,8 +22,7 @@ import AllBugsDB from "./AllBugsDB";
 import MyBugsDB from "./MyBugsDB";
 import {Redirect} from "react-router-dom";
 import Developers from "./developers";
-
-
+import ScrollToTop from "./scrollToTop";
 
 
 export default class Main extends Component{
@@ -31,6 +30,13 @@ export default class Main extends Component{
         super();
         this.linkClick = this.linkClick.bind(this);
         this.scrollToBottom = this.scrollToBottom.bind(this);
+        this.scrollToTop = this.scrollToTop.bind(this);
+        this.dashboardRef = React.createRef();
+        this.bottomDivRef = React.createRef();
+        this.expandNav = this.expandNav.bind(this);
+        this.closeNav = this.closeNav.bind(this);
+        this.navRef = React.createRef();
+        this.navCloseRef = React.createRef();
     }
     linkClick(){
         let currentLink = document.querySelector(".activeLink");
@@ -40,6 +46,7 @@ export default class Main extends Component{
     }
 
     componentDidMount(){
+        console.log(this.bottomDivRef.current, "iuheiuwhi")
         let menuLinks = document.querySelectorAll(".menu--link");
         const x = window.matchMedia("(max-width: 600px)");
 
@@ -64,10 +71,10 @@ export default class Main extends Component{
     })
     }
     expandNav(){
-        const nav = document.getElementById("navigation"); ///expand this;
+        const nav = this.navRef.current; ///expand this;
         const menus = document.querySelectorAll(".menu--sub");///give these a display of block;
-        const bottomDiv = document.querySelector(".bottomDiv")//give this a display of block;
-        const closeNav = document.getElementById("nav--close");
+        const bottomDiv =this.bottomDivRef.current//give this a display of block;
+        const closeNav = this.navCloseRef.current;
 
         menus.forEach(e=>{
             e.style.display= "block";
@@ -81,10 +88,10 @@ export default class Main extends Component{
     }
 
     closeNav(){
-        const nav = document.getElementById("navigation"); ///expand this;
+        const nav = this.navRef.current; ///expand this;
         const menus = document.querySelectorAll(".menu--sub");///give these a display of block;
-        const bottomDiv = document.querySelector(".bottomDiv")//give this a display of block;
-        const closeNav = document.getElementById("nav--close");
+        const bottomDiv = this.bottomDivRef.current//give this a display of block;
+        const closeNav = this.navCloseRef.current;
         
         menus.forEach(e=>{
             e.style.display= "none";
@@ -97,20 +104,24 @@ export default class Main extends Component{
         closeNav.style.display = "none";
     }
 
-    dashboardRef = React.createRef();
     
     scrollToBottom(){
         this.dashboardRef.current.scrollTo(0, this.dashboardRef.current.scrollHeight);
     }
 
+    scrollToTop(){
+        this.dashboardRef.current.scrollTo(0,0);
+    }
+
     render(){
         return (
             <div className="home">
-                <div id="navigation">
-                    <img src={BackIcon} alt="" className="nav--icon" id="nav--close" onClick={this.closeNav}/>
+                <ScrollToTop scrollToTop={this.scrollToTop}/>
+                <div id="navigation" ref={this.navRef}>
+                    <img src={BackIcon} alt="" className="nav--icon" id="nav--close" onClick={this.closeNav} ref={this.navCloseRef}/>
                       <Link to="/" onClick={this.linkClick}><img className="nav__logo" src={btLogo} alt="logo"/></Link>
                       <Menu/>
-                      <BottomDiv/>
+                      <BottomDiv ref={this.bottomDivRef}/>
                 </div>
                 
                 <div id="dashboard" ref={this.dashboardRef}>
@@ -183,7 +194,7 @@ export default class Main extends Component{
                             if(!this.props.auth.uid){
                                  return <Redirect to="/"/>
                              } 
-                        return  <ScreenshotsPage routeArgs={routeArgs}/>
+                        return  <ScreenshotsPage routeArgs={routeArgs} scrollToBottom={this.scrollToBottom}/>
                    }
                     }/>
                 </div>

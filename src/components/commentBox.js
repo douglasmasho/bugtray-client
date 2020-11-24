@@ -19,7 +19,7 @@ class CommentBox extends Component{
     postComment(){
         const {routeArgs} = this.props;
         const projectname = routeArgs.match.params.name;
-        const comment = document.querySelector("#new-comment").value;
+        const comment = this.textAreaRef.current.value;
         const id = routeArgs.match.params.id;
         this.textAreaRef.current.value = "";
         if(comment){

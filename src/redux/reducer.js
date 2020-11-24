@@ -158,7 +158,15 @@ const bugDevs = (state = [], action)=>{
     }
 }
 
+const uploadPercentage = (state = 0, action)=>{
+    switch(action.type){
+        case "UPLOAD_PERCENTAGE":
+            return action.percentage
+            default: return state
+    }
+}
 
-const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers, bugDevs})
+
+const rootReducer = combineReducers({comments, test, bugs, myBugs, devs, firestore: firestoreReducer, firebase: firebaseReducer, auth: authReducer, imageSrc: imageReducer, imageUpload: imageUploadReducer, teamBugs, teamUsers, bugDevs, uploadPercentage})
 
 export default rootReducer;
