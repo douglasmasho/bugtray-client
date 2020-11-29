@@ -1,23 +1,37 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
+import {compose} from "redux";
+import {firestoreConnect} from "react-redux-firebase";
 
 ///read the current status, and check the right button
 
 
 const ChangeStatus = (props) => {
-    const {routeArgs} = props;
-    const name = routeArgs.match.params.name;
-    const id = routeArgs.match.params.id;
-
+    const {routeArgs} = props,
+            name = routeArgs.match.params.name,
+            id = routeArgs.match.params.id,
+            [status, setStatus] = useState("");
+   
 
     useEffect(()=>{
-        
-    }, [])
+        if(props.bugs){
+            document.getElementById(props.bugs[0].status).checked = "true";
+        }
+    },[])        
+
+    const setStatusFunc = (e)=>{
+        setStatus(e.target.id);
+    }
+    
+            
     const changeStatus = (e)=>{
         e.preventDefault();
+        console.log(status)
+           
+        props.changeStatus(id, status);
+        routeArgs.history.push(`/manageBug/${name}/${id}`);
     }
 
 
@@ -30,11 +44,11 @@ const ChangeStatus = (props) => {
             <div className="radio-field u-margin-bottom">
                 <form onSubmit={changeStatus}>
                     <div className="u-margin-bottom-big">
-                    <input type="radio" name="status" id="new" className="radio" required/>
+                    <input type="radio" name="status" id="new" className="radio" required onChange={setStatusFunc}/>
                      <label htmlFor="new" className="radio-label" tabIndex="2" >New</label>
-                     <input type="radio" name="status" id="under-review" className="radio"/>
+                     <input type="radio" name="status" id="under-review" className="radio" onChange={setStatusFunc}/>
                      <label htmlFor="under-review" className="radio-label" tabIndex="2" >Under review</label>
-                     <input type="radio" name="status" id="fixed" className="radio"/>
+                     <input type="radio" name="status" id="fixed" className="radio" onChange={setStatusFunc}/>
                      <label htmlFor="fixed" className="radio-label" tabIndex="2" >Fixed</label>
 
                     </div>
@@ -54,16 +68,19 @@ const mapDispatchToProps = dispatch =>{
     return bindActionCreators(actionCreators, dispatch);
 }
 
-// const mapStateToProps = state=>{
-//     return {
-//         auth: state.firebase.auth,
-//         profile: state.firebase.profile,
-//         screenshots: state.firestore.ordered.screenshots,
-//         uploadPercentage:  state.uploadPercentage
-//     }
-// }
+const mapStateToProps = state=>{
+    return {
+        bugs: state.firestore.ordered.bugs,
+    }
+}
 
-
-
- 
-export default connect(null, mapDispatchToProps)(ChangeStatus);
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect(props=>[
+        {
+        collection: "bugs",
+        doc: props.routeArgs.match.params.id
+        }
+    ])
+    
+)(ChangeStatus);

@@ -11,7 +11,7 @@ export function addComment(commentObj, bugID){
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firestore = getFirestore();
         const firebase = getFirebase();
-        console.log(commentObj);
+        // console.log(commentObj);
         
         firebase.storage().ref(`users/${commentObj.authorID}/profile.jpg`).getDownloadURL().then(resp=>{
             return firestore.collection("comments").doc(bugID).update({
@@ -28,8 +28,6 @@ export function addComment(commentObj, bugID){
 
 export function addScreenshot(screenshotObj, bugID, screenshotFile){
     return (dispatch, getState, {getFirebase, getFirestore}) =>{
-        console.log(screenshotObj)
-        console.log(bugID)
         const firestore = getFirestore();
         const firebase = getFirebase();
         const screenshotID = nanoid(12);
@@ -47,14 +45,14 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
          });
 
         uploadTask.then((resp)=>{ 
-            console.log(resp, "this must be the task right?")  ////////////////////////////////////////////////////////////////////////
+         
             return firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL()
         }).then(resp=>{
             screenshotSrc = resp;
-            console.log(resp)
+            
             return firebase.storage().ref(`users/${screenshotObj.authorID}/profile.jpg`).getDownloadURL()
         }).then(resp=>{
-            console.log(resp)
+          
             return firestore.collection("screenshots").doc(bugID).update({
                 screenshots: firestore.FieldValue.arrayUnion({
                     ...screenshotObj,
@@ -92,7 +90,7 @@ export const addBug =(bug, xtra)=>{
         const firebase = getFirebase();
         let bugID, imgSrc, screenshotLink;
         const screenshotID = nanoid(12);
-        console.log(bug);
+       
         ///use nanoid as bug id so that you can have acces to it in the second promise.
 
         ///first get the imageSrc
@@ -100,14 +98,14 @@ export const addBug =(bug, xtra)=>{
         // console.log(uid)
         firebase.storage().ref(`users/${xtra.uid}/profile.jpg`).getDownloadURL().then(resp=>{
             imgSrc = resp;
-            console.log(resp);
+            
             return  firestore.collection("bugs").add({
                 ...bug
                 ///also run another firestore promise to add the bug id to the teamBugs array
             })
         })
         .then((docRef)=>{
-            console.log(xtra);
+            
             bugID = docRef.id;
             const commentID = nanoid(9)
             socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
@@ -132,7 +130,7 @@ export const addBug =(bug, xtra)=>{
                 screenshotLink = resp;
             })
         }).then(()=>{
-            console.log(screenshotLink)
+          
             return firestore.collection("screenshots").doc(bugID).set({
                screenshots:[{
                     screenshotID: screenshotID,
@@ -174,12 +172,12 @@ export const addBug =(bug, xtra)=>{
 export const signIn = (credentials)=>{
     return (dispatch, getState, {getFirebase})=>{
         const firebase = getFirebase();
-        console.log(credentials)
+        
         firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password).then(()=>{
             dispatch({type: "SIGNIN_SUCCESS"})
-        }).catch(error=>{
-            console.log(error);
-            dispatch({type: "SIGNIN_ERROR", error})
+        }).catch(err=>{
+            console.log(err);
+            dispatch({type: "SIGNIN_ERROR", err})
         })
     }
 }
@@ -215,7 +213,15 @@ export const signUp = (newUser,type)=>{
                 })           
             }
         ).then(()=>{
-            console.log("surprise")
+            fetch(UserIcon).then(resp=>{
+                return resp.blob()
+            }).then(blob=>{
+                return firebase.storage().ref(`users/${uid}/profile.jpg`).put(blob).then((resp)=>{
+                    dispatch({type: "UPLOAD_SUCCESS"})
+                })  
+            })
+        }).then(()=>{
+            
             return firestore.collection("userProjects").doc(uid).set({
                 projectArr: [],
             })
@@ -232,7 +238,7 @@ export const signUp = (newUser,type)=>{
                     default: //
             }
         }).then(()=>{
-            console.log(uid, "second then");
+            
             dispatch({type: "SIGNUP_SUCCESS"});
             console.log("success! :)")
         }).catch(err=>{
@@ -262,10 +268,6 @@ export const getImage = (uid)=>{ ///////////////////////////////////////////////
         // console.log(uid)
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
             dispatch({type: "URL_SUCCESS", url: resp})
-        }).catch(err=>{
-            if(JSON.parse(err.serverResponse_).error.message === "Not Found.  Could not get object"){
-                dispatch({type: "NO_PROFILE_PIC"});
-            }
         })
     }
 }
@@ -285,7 +287,7 @@ export const getTeamBugs = (teamID)=>{
                 })
             })
         }).then(()=>{
-            console.log("teamBugs");
+            
             dispatch({type: "GET_TEAMBUGS", teamBugs})
         }).catch(err=>{
             console.log(err);
@@ -301,16 +303,6 @@ export const getTeamUsers = (teamID)=>{
         const firebase = getFirebase();
         firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
             querySnapshot.docs.forEach((doc,index)=>{
-                let image;
-                // console.log(doc.id);
-                firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().catch(err=>{
-                    teamUsers.push({
-                        ...doc.data(),
-                        id: doc.id,
-                        imgSrc: "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43"
-                    })
-                })
-
                 return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
                     teamUsers.push({
                         ...doc.data(),
@@ -320,7 +312,7 @@ export const getTeamUsers = (teamID)=>{
                 }).then(()=>{
                     if(querySnapshot.size === teamUsers.length){
                       dispatch({type: "GET_TEAMUSERS", teamUsers});
-                      console.log("teamUsers")
+                     
                     }
                 })
             })
@@ -339,9 +331,35 @@ export const getBugDevs = (bugID)=>{
 }
 
 
-export const getStatus = (bugID)=>{
+export const changeStatus = (bugID, status)=>{
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firestore = getFirestore();
+        let devArr = [];
+        let oldBugObj = {};
+        let newBugObj = {};
+        firestore.collection("bugs").doc(bugID).get().then(bug=>{
+            oldBugObj = bug.data();
+            return firestore.collection("bugs").doc(bugID).update({
+                status: status
+            })
+        }).then(()=>{
+          return firestore.collection("bugs").doc(bugID).get().then(bug=>{
+                  newBugObj = bug.data();
+                 const devs = bug.data().devs.map(dev=>dev.id);
+                 devArr = devs      
+           })
+        }).then(()=>{
+            console.log(oldBugObj, newBugObj);
+            devArr.forEach(devID=>{
+                firestore.collection("userProjects").doc(devID).update({
+                    projectArr: firestore.FieldValue.arrayRemove(oldBugObj)
+                }).then(()=>{
+                   return firestore.collection("userProjects").doc(devID).update({
+                       projectArr: firestore.FieldValue.arrayUnion(newBugObj)
+                   })
+                })
+            })
+        })
     }
 }
 

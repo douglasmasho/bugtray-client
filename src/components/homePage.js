@@ -138,7 +138,9 @@ class HomePage extends Component{
 
 
     componentDidMount(){
-        this.props.getImage(this.props.auth.uid);
+        if(this.props.auth.uid){
+            this.props.getImage(this.props.auth.uid);
+        }
     }
 
     componentDidUpdate(prevProps, prevState){

@@ -109,15 +109,14 @@ const authReducer = (state=initAuth, action)=>{
     }
 }
 
-const initSrc = "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43";
+// const initSrc = "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43";
 
 const imageReducer = (state = null, action)=>{
     switch(action.type){
         case "URL_SUCCESS":
             console.log(action.url);
             return action.url;
-        case "NO_PROFILE_PIC":
-            return initSrc;
+
          default: return state    
     }
 }
