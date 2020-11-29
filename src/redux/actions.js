@@ -197,11 +197,6 @@ export const signOut = ()=>{
     }
 }
 
-export const resetPic = ()=>{
-    return (dipatch)=>{
-        dipatch({type:"RESET_PIC"})
-    }
-}
 
 export const signUp = (newUser,type)=>{
     let uid;
@@ -220,14 +215,6 @@ export const signUp = (newUser,type)=>{
                 })           
             }
         ).then(()=>{
-            fetch(UserIcon).then(resp=>{
-                return resp.blob()
-            }).then(blob=>{
-                return firebase.storage().ref(`users/${uid}/profile.jpg`).put(blob).then((resp)=>{
-                    dispatch({type: "UPLOAD_SUCCESS"})
-                })  
-            })
-        }).then(()=>{
             console.log("surprise")
             return firestore.collection("userProjects").doc(uid).set({
                 projectArr: [],
@@ -242,10 +229,7 @@ export const signUp = (newUser,type)=>{
                             users: [uid]
                         })
                     })
-                    case "existing":
-                        return firestore.collection("teamUsers").doc(newUser.teamIDSU).update({
-                            users: firestore.FieldValue.arrayUnion(uid)
-                        })
+                    default: //
             }
         }).then(()=>{
             console.log(uid, "second then");
@@ -274,13 +258,14 @@ export const uploadPic = ({file, uid})=>{
 
 export const getImage = (uid)=>{ /////////////////////////////////////////////////////////////////////////////////////
     return (dispatch, getState, {getFirebase, getFirestore})=>{
-        console.log("qwertyuiop")
         const firebase = getFirebase();
         // console.log(uid)
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
             dispatch({type: "URL_SUCCESS", url: resp})
         }).catch(err=>{
-            // console.log(err)
+            if(JSON.parse(err.serverResponse_).error.message === "Not Found.  Could not get object"){
+                dispatch({type: "NO_PROFILE_PIC"});
+            }
         })
     }
 }
@@ -316,7 +301,16 @@ export const getTeamUsers = (teamID)=>{
         const firebase = getFirebase();
         firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
             querySnapshot.docs.forEach((doc,index)=>{
+                let image;
                 // console.log(doc.id);
+                firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().catch(err=>{
+                    teamUsers.push({
+                        ...doc.data(),
+                        id: doc.id,
+                        imgSrc: "https://firebasestorage.googleapis.com/v0/b/bugtray-b4725.appspot.com/o/generic%2Fbticon.svg?alt=media&token=512eed64-9d1a-4ecd-a51a-6620a1469b43"
+                    })
+                })
+
                 return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
                     teamUsers.push({
                         ...doc.data(),
@@ -325,7 +319,8 @@ export const getTeamUsers = (teamID)=>{
                     })
                 }).then(()=>{
                     if(querySnapshot.size === teamUsers.length){
-                      dispatch({type: "GET_TEAMUSERS", teamUsers})
+                      dispatch({type: "GET_TEAMUSERS", teamUsers});
+                      console.log("teamUsers")
                     }
                 })
             })
@@ -343,6 +338,12 @@ export const getBugDevs = (bugID)=>{
     }
 }
 
+
+export const getStatus = (bugID)=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
+        const firestore = getFirestore();
+    }
+}
 
 
 // export const getImage = (uid)=>{  

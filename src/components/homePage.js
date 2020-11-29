@@ -92,7 +92,6 @@ class HomePage extends Component{
     
     logout(){
         this.props.signOut();
-        this.props.resetPic();
     }
 
     handleChange(e){
@@ -139,16 +138,10 @@ class HomePage extends Component{
 
 
     componentDidMount(){
-            if(this.props.auth.uid){
-                this.props.getImage(this.props.auth.uid);
-            }
+        this.props.getImage(this.props.auth.uid);
     }
-    componentDidUpdate(prevProps, prevState){
-        if(this.props.imageSrc && this.imgRef.current){
-            this.imgRef.current.style.background = `url(${this.props.imageSrc})`
-        }
-        console.log(this.props.auth.uid)
 
+    componentDidUpdate(prevProps, prevState){
         if(prevProps.auth.uid !== this.props.auth.uid){
             if(this.props.loginSuccess){
                      this.closeModal("login");
@@ -167,9 +160,7 @@ class HomePage extends Component{
         // }
 
     }
-
-
-    
+   
     render(){
         const {auth} = this.props;
         let buttons;
@@ -177,7 +168,7 @@ class HomePage extends Component{
           buttons =   (
            <div style={{width: "100%"}}>
                  <div className="row u-margin-bottom-big homePage--div2">
-                        <div className="center-hrz homePage--profilePic--container" style={{background: `url(${this.props.imgSrc})`}} ref={this.imgRef}>
+                        <div className="center-hrz homePage--profilePic--container" style={{background: `url(${this.props.imageSrc})`}} ref={this.imgRef}>
                            {/* <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/> */}
                         </div>
                         <button>Decoy</button>

@@ -46,7 +46,6 @@ export default class Main extends Component{
     }
 
     componentDidMount(){
-        console.log(this.bottomDivRef.current, "iuheiuwhi")
         let menuLinks = document.querySelectorAll(".menu--link");
         const x = window.matchMedia("(max-width: 600px)");
 
@@ -182,7 +181,7 @@ export default class Main extends Component{
                     }
                     }/>
 
-                    <Route exact path="/changeStatus/:name" render={(routeArgs)=>{
+                    <Route exact path="/changeStatus/:name/:id" render={(routeArgs)=>{
                             if(!this.props.auth.uid){
                                     return <Redirect to="/"/>
                              } 
