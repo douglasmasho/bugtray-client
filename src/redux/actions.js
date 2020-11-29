@@ -355,7 +355,10 @@ export const changeStatus = (bugID, status)=>{
                     projectArr: firestore.FieldValue.arrayRemove(oldBugObj)
                 }).then(()=>{
                    return firestore.collection("userProjects").doc(devID).update({
-                       projectArr: firestore.FieldValue.arrayUnion(newBugObj)
+                       projectArr: firestore.FieldValue.arrayUnion({
+                           ...newBugObj,
+                           id: bugID
+                       })
                    })
                 })
             })

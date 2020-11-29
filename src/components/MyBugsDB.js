@@ -20,7 +20,7 @@ const MyBugsDB = (props) => {
         if(props.myBugs){
             console.log(props.myBugs[0].projectArr)
         }
-        console.log(props.data);
+        console.log(props.myBugs);
     })
     if(!props.auth.uid){
         return <Redirect to="/"/>
@@ -36,7 +36,7 @@ const MyBugsDB = (props) => {
             <BugsHeader/>
     {props.myBugs  ? props.myBugs[0].projectArr.map(bug=>{
         const id = nanoid(9)
-    return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>}
+        return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>}
         </div>
      );
 }
