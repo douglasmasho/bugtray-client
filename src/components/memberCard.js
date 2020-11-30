@@ -1,11 +1,6 @@
 import React, {Component} from "react";
-import Rando from "../assets/rando.jpg"
 
  class MemberCard extends Component{
-     componentDidMount(){
-        // console.log(document.querySelector(".input-checkbox-label").attributes.for)
-        // console.log(this.props.dev)
-     }
     render(){
         return(
             <div className="memberCard u-margin-bottom-big" data-userobj={this.props.dev}>

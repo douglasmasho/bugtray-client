@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter} from "react-router-dom";
 // import Main from "./components/main";
 import "./sass/main.scss";
-import ScrollToTop from "./components/scrollToTop";
 import {createStore, applyMiddleware, compose} from "redux";
 import rootReducer from "./redux/reducer";
 import {Provider} from "react-redux";
@@ -14,7 +13,6 @@ import {ReactReduxFirebaseProvider, getFirebase, isLoaded} from "react-redux-fir
 import fbConfig from "./config/fbConfig";
 import firebase from "firebase/app";
 import {useSelector} from "react-redux";
-import {isLoded} from "react-redux-firebase";
 
 
 const store = createStore(rootReducer, compose(
@@ -30,7 +28,7 @@ const profileProps = {
 
     const rrfProps = {
         firebase,
-        config: fbConfig,
+        // config: fbConfig,
         config: profileProps,
         dispatch: store.dispatch,
         createFirestoreInstance

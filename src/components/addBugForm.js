@@ -24,7 +24,7 @@ class AddBugForm extends Component{
     componentDidMount(){
         this.props.getImage(this.props.auth.uid);
         if(this.props.profile.teamID && this.props.teamUsers.length === 0){
-            // console.log("something")
+            
             this.props.getTeamUsers(this.props.profile.teamID)
         } 
 
@@ -32,13 +32,12 @@ class AddBugForm extends Component{
         function autoResize() { 
         this.style.height = 'auto'; 
         this.style.height = this.scrollHeight + 'px'; 
-        // props.middleDiv.scrollTo(0, props.middleDiv.scrollHeight);
+        
      } 
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(this.props.profile.name);
-        // console.log(this.props.auth)
+        
         if(prevProps.profile !== this.props.profile){
             if(this.props.profile.teamID && this.props.teamUsers.length === 0){
                 this.props.getTeamUsers(this.props.profile.teamID)
@@ -70,7 +69,7 @@ class AddBugForm extends Component{
                 [e.target.id] : e.target.value
             })
         }
-        console.log(this.state)
+        
     }
 
     addBug = (e)=>{
@@ -89,10 +88,6 @@ class AddBugForm extends Component{
             this.props.addBug({deadLine: this.state.deadline, name: this.state.projectName, /*id random unique number*/teamID: this.props.profile.teamID,title: this.state.bugTitle, status: "new", devs: usersArr, createdAt: new Date(), author: this.props.profile.name}, {initComment: this.state.initComment, initScreenshot: this.state.initScreenshot, uid: this.props.auth.uid, notes: this.state.notes, name: this.props.profile.name});
             this.props.history.push("/allBugs");
         }
-    }
-
-    test = ()=>{
-        // console.log(this.state)
     }
 
     render(){

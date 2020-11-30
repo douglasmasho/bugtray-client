@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
-import Button from "./button";
 import {connect} from "react-redux";
-import {firestoreConnect} from "react-redux-firebase";
+// import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import {Redirect} from "react-router-dom";
 import * as actionCreators from "../redux/actions";
@@ -10,16 +9,13 @@ import MemberCard from "./memberCard";
 
 
 const Developers = (props) => {
-    useEffect(()=>{
-        console.log("i rendered");
-        console.log(props.teamUsers)
-    })
+    const {profile} = props;
 
     useEffect(()=>{
-        if(props.profile.teamID && props.teamUsers.length === 0){
-            props.getTeamUsers(props.profile.teamID)
+        if(profile.teamID && props.teamUsers.length === 0){
+            props.getTeamUsers(profile.teamID)
         }
-    },[props.profile])
+    },[profile])
 
       if(!props.auth.uid){
            return <Redirect to="/"/>
@@ -53,6 +49,5 @@ const mapStateToProps = state=>{
 }
 
 export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-    firestoreConnect(()=>["bugs"])
+    connect(mapStateToProps, mapDispatchToProps)
 )(Developers);

@@ -2,8 +2,6 @@ import React, {Component, createRef} from "react";
 import Button from "./button";
 import {nanoid} from "nanoid";
 import {connect} from "react-redux";
-import {firestoreConnect} from "react-redux-firebase";
-import {compose} from "redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
 
@@ -18,7 +16,6 @@ class CommentBox extends Component{
 
     postComment(){
         const {routeArgs} = this.props;
-        const projectname = routeArgs.match.params.name;
         const comment = this.textAreaRef.current.value;
         const id = routeArgs.match.params.id;
         this.textAreaRef.current.value = "";

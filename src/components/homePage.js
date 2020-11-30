@@ -5,9 +5,6 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as actionCreators from "../redux/actions";
 import { nanoid } from 'nanoid';
-import UserIcon from "../assets/profile.jpg";
-            // const id = nanoid(9);
-
 
 class HomePage extends Component{
 
@@ -44,12 +41,11 @@ class HomePage extends Component{
     askId(type){
         const idDiv = this.idDivRef.current
         const idInp = this.teamIDRef.current;
-        // console.log(idDiv);
+       
         if(type === "new"){
             idDiv.style.display = "none"
             //assign id to the new team using uuid
             const id = nanoid(9);
-            console.log(id);
             this.setState({
                 teamIDSU: id,
                 type: "new"
@@ -69,8 +65,11 @@ class HomePage extends Component{
         let modal;
         switch(type){
             case "login": modal = this.logInMRef.current;
-            break;
-            case "signup": modal = this.signUpMRef.current
+               break;
+            case "signup": modal = this.signUpMRef.current;
+               break;
+            default: //
+
         }
         const overlay = this.overlayRef.current;
         modal.classList.remove("active");
@@ -95,15 +94,12 @@ class HomePage extends Component{
     }
 
     handleChange(e){
-        // console.log(e.target.name);
-        console.log(this.props.authError)
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
     handleChangeSU(e){
-        // console.log(e.target.name);
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -111,7 +107,6 @@ class HomePage extends Component{
 
     signIn(e){
         e.preventDefault();
-        // console.log(this.state)
         this.props.signIn(this.state);
     }
 
@@ -125,14 +120,12 @@ class HomePage extends Component{
                 this.signUpErrorRef.current.style.display = "none";
              },3000)
         }else{
-            // console.log(this.state);
             this.props.signUp(this.state);
         }
     }
 
     uploadPic(e){
         const file = e.currentTarget.files[0];
-        // console.log(this.props.auth.uid);
         this.props.uploadPic({file, uid: this.props.auth.uid});
     }
 
@@ -146,14 +139,12 @@ class HomePage extends Component{
     componentDidUpdate(prevProps, prevState){
         if(prevProps.auth.uid !== this.props.auth.uid){
             if(this.props.loginSuccess){
-                     this.closeModal("login");
-             }  
-             if(this.props.signupSuccess){
+                this.closeModal("login");
+             }else if(this.props.signupSuccess){
                 this.closeModal("signup");
             }
-        }
-            
-        if(this.props.auth.uid !==  prevProps.auth.uid ){
+        }        
+        if(this.props.auth.uid && this.props.auth.uid !==  prevProps.auth.uid ){
             this.props.getImage(this.props.auth.uid);
         }
 

@@ -1,6 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
-import Rando from "../assets/rando.jpg";
 import moment from "moment";
 
 export default class Comments extends Component{

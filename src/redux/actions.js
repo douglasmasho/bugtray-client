@@ -1,9 +1,6 @@
-import { getFirebase } from "react-redux-firebase";
 import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
 import io from "socket.io-client";
-import { firestore } from "firebase";
-import Screenshot from "../components/screenshot";
 
 const socket = io.connect("/");
 
@@ -11,7 +8,6 @@ export function addComment(commentObj, bugID){
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firestore = getFirestore();
         const firebase = getFirebase();
-        // console.log(commentObj);
         
         firebase.storage().ref(`users/${commentObj.authorID}/profile.jpg`).getDownloadURL().then(resp=>{
             return firestore.collection("comments").doc(bugID).update({
@@ -31,13 +27,13 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
         const firestore = getFirestore();
         const firebase = getFirebase();
         const screenshotID = nanoid(12);
-        let screenshotSrc, authorPic;
+        let screenshotSrc;
         //first upload the screenshot to firebase storage
         const uploadTask = firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile);
 
         uploadTask.on("state_changed", snapshot=>{
             let percentage = (snapshot.bytesTransferred/snapshot.totalBytes) * 100;
-            // console.log(document.querySelector("#uploader"))
+    
             dispatch({
                 type: "UPLOAD_PERCENTAGE",
                 percentage
@@ -80,7 +76,9 @@ export const testAddPic = (file)=>{
         const firebase = getFirebase();
         firebase.storage().ref("screenshots/someID/pic.jpg").put(file).then(()=>{
             console.log("it worked")
-        }).catch("it didnt work")
+        }).catch(e=>{
+            console.log(e)
+        })
     }
 }
 export const addBug =(bug, xtra)=>{
@@ -95,7 +93,7 @@ export const addBug =(bug, xtra)=>{
 
         ///first get the imageSrc
     
-        // console.log(uid)
+       
         firebase.storage().ref(`users/${xtra.uid}/profile.jpg`).getDownloadURL().then(resp=>{
             imgSrc = resp;
             
@@ -175,9 +173,9 @@ export const signIn = (credentials)=>{
         
         firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password).then(()=>{
             dispatch({type: "SIGNIN_SUCCESS"})
-        }).catch(err=>{
-            console.log(err);
-            dispatch({type: "SIGNIN_ERROR", err})
+        }).catch(e=>{
+            console.log(e);
+            dispatch({type: "SIGNIN_ERROR", e})
         })
     }
 }
@@ -241,9 +239,9 @@ export const signUp = (newUser,type)=>{
             
             dispatch({type: "SIGNUP_SUCCESS"});
             console.log("success! :)")
-        }).catch(err=>{
-            dispatch({type: "SIGNUP_ERROR",err});
-            console.log("error :(")
+        }).catch(e=>{
+            dispatch({type: "SIGNUP_ERROR",e});
+            console.log(e)
 
         })
     }
@@ -251,13 +249,12 @@ export const signUp = (newUser,type)=>{
 
 export const uploadPic = ({file, uid})=>{
     return (dispatch, getState, {getFirebase, getFirestore})=>{
-        // console.log(file, uid)
         const firebase = getFirebase();
         firebase.storage().ref(`users/${uid}/profile.jpg`).put(file).then((resp)=>{
             dispatch({type: "UPLOAD_SUCCESS"})
             window.location.reload();
-        }).catch((err)=>{
-            console.log(err)
+        }).catch((e)=>{
+            console.log(e)
         })
     }
 }
@@ -265,7 +262,6 @@ export const uploadPic = ({file, uid})=>{
 export const getImage = (uid)=>{ /////////////////////////////////////////////////////////////////////////////////////
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firebase = getFirebase();
-        // console.log(uid)
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
             dispatch({type: "URL_SUCCESS", url: resp})
         })
@@ -277,10 +273,10 @@ export const getTeamBugs = (teamID)=>{
     return (dispatch, getState, {getFirestore})=>{
         const firestore = getFirestore();
         let teamBugs = [];
-        // console.log(teamID)
+       
         firestore.collection("bugs").where("teamID", "==", teamID).get().then(querySnapshot=>{
             querySnapshot.forEach(doc=>{
-                // console.log(doc.id);
+               
                 teamBugs.push({
                     ...doc.data(),
                     id: doc.id
@@ -289,8 +285,8 @@ export const getTeamBugs = (teamID)=>{
         }).then(()=>{
             
             dispatch({type: "GET_TEAMBUGS", teamBugs})
-        }).catch(err=>{
-            console.log(err);
+        }).catch(e=>{
+            console.log(e);
         })
     }
 }
@@ -299,8 +295,8 @@ export const getTeamBugs = (teamID)=>{
 export const getTeamUsers = (teamID)=>{
     let teamUsers = [];
     return (dispatch, getState, {getFirebase,getFirestore})=>{
-        const firestore = getFirestore();
-        const firebase = getFirebase();
+                        const firestore = getFirestore();
+                        const firebase = getFirebase();
         firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
             querySnapshot.docs.forEach((doc,index)=>{
                 return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
@@ -349,10 +345,12 @@ export const changeStatus = (bugID, status)=>{
                  devArr = devs      
            })
         }).then(()=>{
-            console.log(oldBugObj, newBugObj);
             devArr.forEach(devID=>{
                 firestore.collection("userProjects").doc(devID).update({
-                    projectArr: firestore.FieldValue.arrayRemove(oldBugObj)
+                    projectArr: firestore.FieldValue.arrayRemove({
+                        ...oldBugObj,
+                        id: bugID
+                    })
                 }).then(()=>{
                    return firestore.collection("userProjects").doc(devID).update({
                        projectArr: firestore.FieldValue.arrayUnion({
@@ -367,16 +365,58 @@ export const changeStatus = (bugID, status)=>{
 }
 
 
-// export const getImage = (uid)=>{  
-//     return (dispatch, geState, {getFirebase, getFirestore})=>{
-//         console.log("qwertyuiop")
-//         const firebase = getFirebase();
-//         // console.log(uid)
-//         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
-//             dispatch({type: "URL_SUCCESS", url: resp})
-//         }).catch(err=>{
-//             // console.log(err)
-//         })
-//     }
+export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs)=>{
+   return (dispatch,getState, {getFirebase, getFirestore})=>{
+       console.log("executed")
+       const firestore = getFirestore();
+       //get the bugObj
+       let bugObj = {};
+       firestore.collection("bugs").doc(bugID).get()
+       .then(resp=>{
+           bugObj = resp.data();
+            selectedArr.forEach(devID=>{
+                firestore.collection("userProjects").doc(devID).get().then(doc=>{
+                    if(doc.data().projectArr.some(e=> e.id === bugID)){
+                       
+                        //do nothing
+                    }else{
+                        //add the bug to the array
+                        firestore.collection("userProjects").doc(devID).update({
+                            projectArr: firestore.FieldValue.arrayUnion({
+                                ...bugObj,
+                                id: bugID
+                            })
+                        })
+                    }
+                })
+            })
+
+            unSelectedArr.forEach(devID=>{
+                firestore.collection("userProjects").doc(devID).get().then(doc=>{
+                    if(doc.data().projectArr.some(e=>e.id === bugID)){
+                        //romove the bug from the array
+                        firestore.collection("userProjects").doc(devID).update({
+                            projectArr: firestore.FieldValue.arrayRemove({
+                                ...bugObj,
+                                id: bugID
+                            })
+                        })
+                        //remove from the bug, the devObjs
+                        const devObj = unSelectedObjs.find(el=>el.id === devID);
+                        console.log(devObj)
+                        firestore.collection("bugs").doc(bugID).update({
+                            devs: firestore.FieldValue.arrayRemove(devObj)
+                        })
+                    }else{
+                        //do nothing
+                    }
+                })
+            })
+       })
+
+   }
+
+}
+
 // }///do a getImage but for multiple users, instead of receiving a sgle UID, receive an array of UIDs, then forEach of the UIDs, get the profile pic urls, then push them into an array, Each item in the array will be an object, {UID,url}.
 // you can then dispatch this new array tot the reducer, where it becomes state. When reading the state in your application, Use the UIDs of the members to get the right URL from the array. 

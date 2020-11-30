@@ -1,5 +1,4 @@
-import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import React from "react";
 import Bell from "../assets/bellicon.svg";
 
 const BottomDiv = React.forwardRef((props, ref)=>{

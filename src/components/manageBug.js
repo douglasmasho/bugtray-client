@@ -39,7 +39,7 @@ class ManageBug extends Component{
                     </div>
 
                     <div className="center-hrz--col">
-                       <Link to={`/assignToDevs/${name}`}><Button name="Assign to Developers" specClasses="button__yellow u-margin-bottom"></Button></Link>
+                       <Link to={`/assignToDevs/${name}/${id}`}><Button name="Assign to Developers" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Link to={`/changeStatus/${name}/${id}`}><Button name="Change status" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Link to={`/comments/${name}/${id}`}><Button name="Comments" specClasses="button__yellow u-margin-bottom"></Button></Link>
                        <Link to={`/screenshots/${name}/${id}`}><Button name="Screenshots" specClasses="button__yellow u-margin-bottom"></Button></Link>

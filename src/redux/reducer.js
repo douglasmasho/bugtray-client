@@ -2,7 +2,6 @@ import testArr from "../data/testArr";
 import {combineReducers} from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
-import UserIcon from "../assets/profile.jpg";
 import { nanoid } from 'nanoid';
 
 
@@ -114,7 +113,6 @@ const authReducer = (state=initAuth, action)=>{
 const imageReducer = (state = null, action)=>{
     switch(action.type){
         case "URL_SUCCESS":
-            console.log(action.url);
             return action.url;
 
          default: return state    
@@ -148,10 +146,9 @@ const teamUsers = (state= [], action)=>{
     }
 }
 
-const bugDevs = (state = [], action)=>{
+const bugDevs = (state = "", action)=>{
     switch(action.type){
         case "GET_BUGDEVS":
-            console.log(action.devs)
             return action.devs
             default: return state
     }

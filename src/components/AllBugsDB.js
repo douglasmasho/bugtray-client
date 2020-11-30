@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import {connect} from "react-redux";
 import BugsHeader from "./bugsHeader";
 import Bugs from "./bugs";
@@ -13,16 +13,14 @@ import {bindActionCreators} from "redux";
 
 
 const AllBugsDB = (props) => {
+    const {profile} = props;
+
 
     useEffect(()=>{
-        console.log("i rendered");
-    })
-
-    useEffect(()=>{
-        if(props.profile.teamID){
-            props.getTeamBugs(props.profile.teamID);
+        if(profile.teamID){
+            props.getTeamBugs(profile.teamID);
         }
-    }, [props.profile])
+    }, [profile])
 
     if(!props.auth.uid){
         return <Redirect to="/"/>

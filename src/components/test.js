@@ -2,7 +2,6 @@ import React from "react";
 import { withRouter } from "react-router-dom"
 
 const Test = (props)=>{
-    console.log(props);
     return(
         <div>
             <h1>Test</h1>

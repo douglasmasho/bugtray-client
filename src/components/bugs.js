@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Dots from "../assets/dots.svg";
 import {Link} from "react-router-dom";
 import Eye from "../assets/eye.svg";
-// import {Link} from "react-router-dom";
+
 
 
 export default class Bugs extends Component{
@@ -10,7 +10,7 @@ export default class Bugs extends Component{
     render(){
     let {name, id, deadLine, title, status} = this.props.bugObj;
     let formattedDate = deadLine;
-    // console.log(formattedDate);
+    
         return (
         <div className="bugs--data row">
         <li className="white-text bugs--row row-8--child">

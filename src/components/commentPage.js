@@ -15,14 +15,12 @@ class CommentPage extends Component{
     }
 
     render(){
-        console.log(this.props.comments)
         let {routeArgs} = this.props;
         let name = routeArgs.match.params.name;
         let id = routeArgs.match.params.id;
         let commentsArr;
         this.props.comments && this.props.comments.length > 0 ? commentsArr = this.props.comments[0].comments : commentsArr = [];
         // let newArr = commentsArr.filter(comment=> comment.id === name + id);
-        console.log(commentsArr);
         return(
             <div className="screen center-hrz--col">
                 <h1 className="screen__header u-margin-bottom white-text">comments</h1>

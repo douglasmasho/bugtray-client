@@ -7,21 +7,13 @@ import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-import { useEffect } from 'react';
-import {nanoid} from "nanoid"
 
 
 
 
 
 const MyBugsDB = (props) => {
-    // console.log(props.myBugs)
-    useEffect(()=>{
-        if(props.myBugs){
-            console.log(props.myBugs[0].projectArr)
-        }
-        console.log(props.myBugs);
-    })
+    
     if(!props.auth.uid){
         return <Redirect to="/"/>
     }
@@ -35,7 +27,6 @@ const MyBugsDB = (props) => {
             </div>
             <BugsHeader/>
     {props.myBugs  ? props.myBugs[0].projectArr.map(bug=>{
-        const id = nanoid(9)
         return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>}
         </div>
      );

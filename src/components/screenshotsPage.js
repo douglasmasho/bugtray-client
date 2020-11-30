@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
 import Screenshot from "./screenshot";
 import mediumZoom from 'medium-zoom';
 import {connect} from "react-redux";
@@ -34,12 +33,11 @@ class ScreenshotsPage extends Component{
                 [e.target.id]: e.target.value
             })
         }
-        console.log(this.state)
+        
     }
 
     addScreenshot(e){
         e.preventDefault();
-        console.log("panda")
         this.props.addScreenshot(
             {  
                 authorID: this.props.auth.uid,
@@ -58,7 +56,6 @@ class ScreenshotsPage extends Component{
 
     componentDidUpdate(){
         this.progressRef.current.value = this.props.uploadPercentage;
-        console.log("i updated");
         if(this.progressRef.current.value === 100){
             setTimeout(()=>{
                 this.progressRef.current.value = 0

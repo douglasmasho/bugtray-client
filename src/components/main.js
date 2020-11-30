@@ -2,12 +2,8 @@ import React, {Component} from "react";
 import {Route} from "react-router-dom";
 import {Link} from "react-router-dom"
 import btLogo  from "../assets/btlogo.svg"
-import BugsHeader from "./bugsHeader"
 import Menu from "./menu";
-import Bugs from "./bugs";
 import BottomDiv from "./bottomDiv";
-import Button from "./button";
-import MemberCard from "./memberCard";
 import AddBugForm from "./addBugForm";
 import ManageBug from "./manageBug";
 import AssignToDevs from "./assignToDevs";
@@ -52,12 +48,9 @@ export default class Main extends Component{
         //query function 
         let closeNavinQ = (x)=>{
             if(x.matches){
-                console.log("the media matched");
                 menuLinks.forEach((e)=>{
                     e.addEventListener("click", this.closeNav);
                 })
-            }else{
-                // console.log("the media does not match");
             }
         }
 
@@ -173,7 +166,7 @@ export default class Main extends Component{
                     }
                     }/>
 
-                    <Route exact path="/assignToDevs/:name" render={(routeArgs)=>{
+                    <Route exact path="/assignToDevs/:name/:id" render={(routeArgs)=>{
                         if(!this.props.auth.uid){
                             return <Redirect to="/"/>
                        }
