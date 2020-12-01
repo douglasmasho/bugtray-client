@@ -5,6 +5,7 @@ import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
 // import {Link} from "react-router-dom";
 import MemberCard from "./memberCard";
+import {firestoreConnect}  from "react-redux-firebase";
 
 const AssignToDevs = props=>{
     const {routeArgs} = props,
@@ -12,6 +13,18 @@ const AssignToDevs = props=>{
            id = routeArgs.match.params.id,
            {profile} = props,
            errorRef = useRef();
+           
+           useEffect(()=>{
+               if(props.bug && Array.from(document.querySelectorAll(".input-checkbox")).length > 0){
+                console.log(Array.from(document.querySelectorAll(".input-checkbox")).length)
+                    props.bug[0].devs.forEach(dev=>{
+                        const id = dev.id;
+                            document.getElementById(id).checked = "true"
+                    
+                    })
+               }
+           })
+
 
 
         const setDevs = (e)=>{
@@ -37,7 +50,8 @@ const AssignToDevs = props=>{
                  //find the uselected devIDs
                  const unSelectedIDs = theRestArr.map(box=>box.id);
                  const unSelectedObjs = theRestArr.map(box=>JSON.parse(box.dataset.userobj));
-                 props.assignToDevs(selectedIDs, unSelectedIDs, id, unSelectedObjs);
+                 const selectedObjs = filteredArr.map(box=>JSON.parse(box.dataset.userobj))
+                 props.assignToDevs(selectedIDs, unSelectedIDs, id, unSelectedObjs, selectedObjs);
             }
         }   
 
@@ -48,13 +62,6 @@ const AssignToDevs = props=>{
             }
 
         },[profile])
-        useEffect(()=>{
-            const boxesArr = Array.from(document.querySelectorAll(".input-checkbox"));
-            console.log(boxesArr)
-             if(boxesArr.length > 1){
-                console.log(JSON.parse(boxesArr[0].dataset.userobj));
-             }
-        })
 
         return (
             <div className="screen">
@@ -89,8 +96,14 @@ const mapDispatchToProps = dispatch =>{
 const mapStateToProps = state=>{
     return {
         profile: state.firebase.profile,
-        teamUsers: state.teamUsers
+        teamUsers: state.teamUsers,
+        bug: state.firestore.ordered.bugs
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AssignToDevs);
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect(props=>[
+        {collection: "bugs", doc: props.routeArgs.match.params.id}
+    ])
+)(AssignToDevs);

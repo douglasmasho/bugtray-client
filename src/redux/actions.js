@@ -365,19 +365,20 @@ export const changeStatus = (bugID, status)=>{
 }
 
 
-export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs)=>{
+export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, selectedObjs)=>{
    return (dispatch,getState, {getFirebase, getFirestore})=>{
        console.log("executed")
        const firestore = getFirestore();
        //get the bugObj
        let bugObj = {};
+
+
        firestore.collection("bugs").doc(bugID).get()
        .then(resp=>{
            bugObj = resp.data();
             selectedArr.forEach(devID=>{
                 firestore.collection("userProjects").doc(devID).get().then(doc=>{
-                    if(doc.data().projectArr.some(e=> e.id === bugID)){
-                       
+                    if(doc.data().projectArr.some(e=> e.id === bugID)){   
                         //do nothing
                     }else{
                         //add the bug to the array
@@ -387,9 +388,15 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs)=
                                 id: bugID
                             })
                         })
+                        //add the devObj to the dev field  of the bug doc
+                        const devObj = selectedObjs.find(el=>el.id === devID);
+                        firestore.collection("bugs").doc(bugID).update({
+                            devs: firestore.FieldValue.arrayUnion(devObj)
+                        })
                     }
                 })
             })
+
 
             unSelectedArr.forEach(devID=>{
                 firestore.collection("userProjects").doc(devID).get().then(doc=>{
