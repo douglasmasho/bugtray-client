@@ -20,7 +20,6 @@ const AssignToDevs = props=>{
                     props.bug[0].devs.forEach(dev=>{
                         const id = dev.id;
                             document.getElementById(id).checked = "true"
-                    
                     })
                }
            })
@@ -53,6 +52,8 @@ const AssignToDevs = props=>{
                  const selectedObjs = filteredArr.map(box=>JSON.parse(box.dataset.userobj))
                  props.assignToDevs(selectedIDs, unSelectedIDs, id, unSelectedObjs, selectedObjs);
             }
+
+            routeArgs.history.push(`/manageBug/${name}/${id}`);
         }   
 
     

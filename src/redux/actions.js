@@ -346,10 +346,14 @@ export const changeStatus = (bugID, status)=>{
            })
         }).then(()=>{
             devArr.forEach(devID=>{
-                firestore.collection("userProjects").doc(devID).update({
-                    projectArr: firestore.FieldValue.arrayRemove({
-                        ...oldBugObj,
-                        id: bugID
+               let objToBeRemoved
+
+                firestore.collection("userProjects").doc(devID).get().then(doc=>{
+                    objToBeRemoved = doc.data().projectArr.find(e=>e.id=== bugID);
+                    console.log(objToBeRemoved)
+                }).then(()=>{
+                   return firestore.collection("userProjects").doc(devID).update({
+                        projectArr: firestore.FieldValue.arrayRemove(objToBeRemoved)
                     })
                 }).then(()=>{
                    return firestore.collection("userProjects").doc(devID).update({
@@ -378,9 +382,7 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, 
            bugObj = resp.data();
             selectedArr.forEach(devID=>{
                 firestore.collection("userProjects").doc(devID).get().then(doc=>{
-                    if(doc.data().projectArr.some(e=> e.id === bugID)){   
-                        //do nothing
-                    }else{
+                    if(!doc.data().projectArr.some(e=> e.id === bugID)){   
                         //add the bug to the array
                         firestore.collection("userProjects").doc(devID).update({
                             projectArr: firestore.FieldValue.arrayUnion({
@@ -393,29 +395,34 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, 
                         firestore.collection("bugs").doc(bugID).update({
                             devs: firestore.FieldValue.arrayUnion(devObj)
                         })
+                        
                     }
                 })
             })
 
 
             unSelectedArr.forEach(devID=>{
+                let objToBeRemoved;
                 firestore.collection("userProjects").doc(devID).get().then(doc=>{
                     if(doc.data().projectArr.some(e=>e.id === bugID)){
                         //romove the bug from the array
-                        firestore.collection("userProjects").doc(devID).update({
-                            projectArr: firestore.FieldValue.arrayRemove({
-                                ...bugObj,
-                                id: bugID
+                        firestore.collection("userProjects").doc(devID).get().then(doc=>{
+                            objToBeRemoved  = doc.data().projectArr.find(obj=> obj.id === bugID);
+                            console.log(objToBeRemoved);
+                         }).then(()=>{
+                           return firestore.collection("userProjects").doc(devID).update({
+                                projectArr: firestore.FieldValue.arrayRemove(objToBeRemoved)
                             })
-                        })
-                        //remove from the bug, the devObjs
-                        const devObj = unSelectedObjs.find(el=>el.id === devID);
-                        console.log(devObj)
-                        firestore.collection("bugs").doc(bugID).update({
-                            devs: firestore.FieldValue.arrayRemove(devObj)
-                        })
-                    }else{
-                        //do nothing
+                         }).then(()=>{
+                                //remove from the bug, the devObjs
+                                const devObj = unSelectedObjs.find(el=>el.id === devID);
+                                console.log(devObj)
+                                firestore.collection("bugs").doc(bugID).update({
+                                    devs: firestore.FieldValue.arrayRemove(devObj)
+                                })
+                         })
+
+
                     }
                 })
             })
