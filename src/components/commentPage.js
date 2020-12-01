@@ -6,6 +6,7 @@ import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
+import JustAnmimation from "./JustAnimation";
 
 
 class CommentPage extends Component{
@@ -26,7 +27,8 @@ class CommentPage extends Component{
                 <h1 className="screen__header u-margin-bottom white-text">comments</h1>
                 <h3 className="white-text normal-text u-margin-bottom-big">{name}-{id}</h3>
                 {
-                    commentsArr.map((comment)=>(<Comment key={comment.commentID} text={comment.comment} name={comment.authorName} imgSrc={comment.imgSrc} timeStamp={comment.timeStamp}/>))
+                   this.props.comments  ? this.props.comments.length > 0 ? commentsArr.map((comment)=>(<Comment key={comment.commentID} text={comment.comment} name={comment.authorName} imgSrc={comment.imgSrc} timeStamp={comment.timeStamp}/> )) : <p className="white-text bigger-text">There are no comments</p> 
+                   : <JustAnmimation/> 
                 }
                 <CommentBox  {...this.props}/>
             </div>

@@ -1,12 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 import LoadingAnim from "../animations/loading.json";
 import lottie from "lottie-web";
-import btLogo  from "../assets/btlogo.svg";
 
-
-const Loading = () => {
+const JustAnmimation = () => {
     const animContainerLoading = useRef(),
-          animRefLoading = useRef(null);
+    animRefLoading = useRef(null);
 
     useEffect(()=>{
         animRefLoading.current = lottie.loadAnimation({
@@ -18,13 +16,9 @@ const Loading = () => {
 
     },[])
     return ( 
-        <div className="loading">
-            <div className="center-hrz--col loading--container">
-                <img src={btLogo} alt="" className="loading--logo"/>
-                <div ref={animContainerLoading}></div>
-            </div>
+        <div ref={animContainerLoading}>
         </div>
      );
 }
  
-export default Loading;
+export default JustAnmimation;

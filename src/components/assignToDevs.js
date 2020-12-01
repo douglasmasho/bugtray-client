@@ -6,6 +6,7 @@ import {bindActionCreators} from "redux";
 // import {Link} from "react-router-dom";
 import MemberCard from "./memberCard";
 import {firestoreConnect}  from "react-redux-firebase";
+import JustAnimation from "./JustAnimation";
 
 const AssignToDevs = props=>{
     const {routeArgs} = props,
@@ -75,7 +76,7 @@ const AssignToDevs = props=>{
                     <div className="center-hrz--col u-margin-top-big u-margin-bottom">
                         {props.teamUsers.length > 0 ? props.teamUsers.map(dev=>(
                         <MemberCard checkbox="visible" key={dev.id} dev={dev}/>
-                        )): <p className="white-text">Loading</p>}
+                        )): <JustAnimation/>}
                     </div>
 
                     <div className="center-hrz--col">

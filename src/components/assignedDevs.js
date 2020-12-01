@@ -6,6 +6,7 @@ import {bindActionCreators} from "redux";
 import MemberCard from "./memberCard";
 import {Link} from "react-router-dom";
 import Button from "./button";
+import JustAnmimation from './JustAnimation';
 
 
 const AssignedDevs = (props) => {
@@ -30,7 +31,7 @@ const AssignedDevs = (props) => {
 
             <div className="center-hrz--col u-margin-top-big">
                 {typeof(props.bugDevs) === "object" ? props.bugDevs.length > 0 ? props.bugDevs.map((dev)=>(<MemberCard checkbox="none" key={dev.id} dev={dev}/>)) : <Link to={`/assignToDevs/${name}/${id}`}><Button name="Assign to Developers" specClasses="button__yellow u-margin-bottom"></Button></Link>
-                : <p className="white-text bigger-text">Loading...</p>}
+                : <JustAnmimation/>}
             </div>    
         </div>
 

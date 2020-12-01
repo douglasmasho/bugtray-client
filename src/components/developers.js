@@ -6,6 +6,8 @@ import {Redirect} from "react-router-dom";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
 import MemberCard from "./memberCard";
+import JustAnmimation from './JustAnimation';
+
 
 
 const Developers = (props) => {
@@ -29,7 +31,7 @@ const Developers = (props) => {
                 <div className="center-hrz--col u-margin-top-big">
                     {props.teamUsers.length > 0 ? props.teamUsers.map((dev, index)=>(
                     <MemberCard checkbox="none" key={dev.id} dev={dev}/>
-                    )): <p className="white-text">Loading</p>}
+                    )): <JustAnmimation/>}
                 </div>
             </div>
         )

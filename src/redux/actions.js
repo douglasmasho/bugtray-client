@@ -389,13 +389,15 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, 
                                 ...bugObj,
                                 id: bugID
                             })
-                        })
-                        //add the devObj to the dev field  of the bug doc
-                        const devObj = selectedObjs.find(el=>el.id === devID);
-                        firestore.collection("bugs").doc(bugID).update({
-                            devs: firestore.FieldValue.arrayUnion(devObj)
-                        })
-                        
+                        }).then(()=>{
+                            //add the devObj to the dev field  of the bug doc
+                            const devObj = selectedObjs.find(el=>el.id === devID);
+                            firestore.collection("bugs").doc(bugID).update({
+                                devs: firestore.FieldValue.arrayUnion(devObj)
+                            })
+                        }).catch(e=>{
+                            console.log(e)
+                        })        
                     }
                 })
             })
@@ -420,6 +422,8 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, 
                                 firestore.collection("bugs").doc(bugID).update({
                                     devs: firestore.FieldValue.arrayRemove(devObj)
                                 })
+                         }).catch(e=>{
+                             console.log(e)
                          })
 
 
@@ -430,6 +434,72 @@ export const assignToDevs = (selectedArr, unSelectedArr, bugID, unSelectedObjs, 
 
    }
 
+}
+
+
+export const deleteBug = (bugID)=>{
+    return (dispatch ,getState, {getFirebase, getFirestore}) =>{
+        console.log(bugID);
+        const firestore = getFirestore();
+        const firebase = getFirebase();
+        let devsArr, objToBeRemoved;
+        //remove from Collections
+        ///bugs
+        //first get the ids of the devs that were assigned the bug
+        //and also the screenshotIDs, then delete them
+
+
+        firestore.collection("screenshots").doc(bugID).get().then(doc=>{
+            const scrnshtIDsArr =  doc.data().screenshots.map(scrnsht=>scrnsht.screenshotID);
+            console.log(scrnshtIDsArr);
+            scrnshtIDsArr.forEach(id=>{
+                firebase.storage().ref(`screenshots/${bugID}/${id}.jpg`).delete().then(()=>{
+                    console.log("the screenshot has been deleted")
+                }).catch(e=>{
+                    console.log(e);
+                })
+            })
+        }).then(()=>{
+          return firestore.collection("bugs").doc(bugID).get().then(doc=>{
+            devsArr = doc.data().devs.map(dev=>dev.id);
+            console.log(devsArr);
+        }).then(
+            ()=>{
+            firestore.collection("bugs").doc(bugID).delete().then(()=>{
+                console.log("the bug doc has been deleted");
+                ///comments
+                return firestore.collection("comments").doc(bugID).delete()
+            }).then(()=>{
+            ///screenshots
+                console.log("the comments doc has been deleted");
+                return firestore.collection("screenshots").doc(bugID).delete()
+            })
+            .then(()=>{
+                console.log("the screenshots doc has been deleted")
+                ///userProjects
+                devsArr.forEach(devID=>{
+                    firestore.collection("userProjects").doc(devID).get().then(doc=>{
+                        objToBeRemoved = doc.data().projectArr.find(bug=>bug.id === bugID);
+                        console.log(objToBeRemoved);
+                            ///userProjects                
+                        firestore.collection("userProjects").doc(devID).update({
+                            projectArr: firestore.FieldValue.arrayRemove(objToBeRemoved)
+                        })
+                    })
+                })
+            }).then(()=>{
+            //remove from Storage
+            //screenshots
+            })
+        })
+
+        })
+
+
+
+
+
+    }
 }
 
 // }///do a getImage but for multiple users, instead of receiving a sgle UID, receive an array of UIDs, then forEach of the UIDs, get the profile pic urls, then push them into an array, Each item in the array will be an object, {UID,url}.
