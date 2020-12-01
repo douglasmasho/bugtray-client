@@ -12,6 +12,18 @@
         background-size: cover !important;
         background-position: center;
     }
+    &--pencil{
+        padding: 1rem;
+        border-radius: 50%;
+        border: none;
+        background-color: white;
+        position: absolute;
+        cursor: pointer;
+        &:hover{
+            transform: scale(1.2);
+            transition: all .5s;
+        }
+    }
     // &--profilePic{
     //     width: 30rem;
     //     border-radius: 50%;

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Route} from "react-router-dom";
 import {Link} from "react-router-dom"
-import btLogo  from "../assets/btlogo.svg"
+import btLogo  from "../assets/btlogo.svg";
 import Menu from "./menu";
 import BottomDiv from "./bottomDiv";
 import AddBugForm from "./addBugForm";
@@ -19,6 +19,7 @@ import MyBugsDB from "./MyBugsDB";
 import {Redirect} from "react-router-dom";
 import Developers from "./developers";
 import ScrollToTop from "./scrollToTop";
+import Loading from "./Loading"
 
 
 export default class Main extends Component{
@@ -189,6 +190,8 @@ export default class Main extends Component{
                         return  <ScreenshotsPage routeArgs={routeArgs} scrollToBottom={this.scrollToBottom}/>
                    }
                     }/>
+
+                    <Route exact path="/loading" component={Loading}/>
                 </div>
                 </div>
 

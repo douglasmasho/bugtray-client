@@ -5,6 +5,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as actionCreators from "../redux/actions";
 import { nanoid } from 'nanoid';
+import Pencil from "../assets/pencil.svg";
 
 class HomePage extends Component{
 
@@ -19,6 +20,8 @@ class HomePage extends Component{
         this.signIn = this.signIn.bind(this);
         this.signUp = this.signUp.bind(this);
         this.uploadPic = this.uploadPic.bind(this);
+        this.uploadDecoy = this.uploadDecoy.bind(this);
+
 
         this.overlayRef = React.createRef(null);
         this.logInMRef = React.createRef();
@@ -27,6 +30,8 @@ class HomePage extends Component{
         this.imgRef = React.createRef();
         this.idDivRef = React.createRef();
         this.teamIDRef = React.createRef();
+        this.uploadPicRef = React.createRef();
+
     }
     state = {
         email: "",
@@ -153,6 +158,11 @@ class HomePage extends Component{
         // }
 
     }
+
+    uploadDecoy(){
+        this.uploadPicRef.current.click();
+
+    }
    
     render(){
         const {auth} = this.props;
@@ -163,9 +173,9 @@ class HomePage extends Component{
                  <div className="row u-margin-bottom-big homePage--div2">
                         <div className="center-hrz homePage--profilePic--container" style={{background: `url(${this.props.imageSrc})`}} ref={this.imgRef}>
                            {/* <img className="homePage--profilePic" src={this.props.imageSrc} alt="logo" ref={this.imgRef}/> */}
+                        <button onClick={this.uploadDecoy} className="homePage--pencil"><img src={Pencil} alt="" /></button>
                         </div>
-                        <button>Decoy</button>
-                        <input type="file" onChange={this.uploadPic}/>
+                        <input type="file" onChange={this.uploadPic} ref={this.uploadPicRef} style={{display: "none"}}/>
                      <div className="" style={{textAlign: "left"}}>
                          <div className="center-hrz">
                             <h1 className="screen__header white-text" style={{width: "100%", textAlign: "center", marginBottom: "0"}}>{this.props.profile.name}</h1>
@@ -203,15 +213,6 @@ class HomePage extends Component{
             <div className="homePage">
                  <div className="center-hrz-col homePage--div" style={{width: "100%"}}>
                             <div className="row homePage--row">
-                                {/* <Button name="Log In"  specClasses="button__yellow u-margin-right" callBack={(event)=>{
-                                    this.openModal("login")
-                                }}/>
-                                <Button name="Sign Up" specClasses="button__green u-margin-right"callBack={(event)=>{
-                                    this.openModal("signup")
-                                }}/>
-                                <Button name="Log Out" specClasses="button__red u-margin-right" callBack={e=>{
-                                    this.logout();
-                                }}/> */}
                                 {buttons}
                             </div>
                  </div>

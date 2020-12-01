@@ -13,7 +13,7 @@ import {ReactReduxFirebaseProvider, getFirebase, isLoaded} from "react-redux-fir
 import fbConfig from "./config/fbConfig";
 import firebase from "firebase/app";
 import {useSelector} from "react-redux";
-
+import Loading from "./components/Loading"
 
 const store = createStore(rootReducer, compose(
     applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
@@ -38,8 +38,11 @@ const profileProps = {
 const AuthIsLoaded = props=>{
     const {children} = props;
     const auth = useSelector(state=>state.firebase.auth);
-    if(!isLoaded(auth)) return <div>Splash screen</div>
-    return children
+    if(!isLoaded(auth)) {
+        return <Loading/>
+    }else{
+        return children
+    }
 
 }
 
