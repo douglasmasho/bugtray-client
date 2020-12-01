@@ -5,7 +5,7 @@ import MemberCard from "./memberCard";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-import JustAnmimation from "./JustAnimation";
+import JustAnimation from "./JustAnimation";
 // import { nanoid } from 'nanoid';
 
 
@@ -121,7 +121,7 @@ class AddBugForm extends Component{
 
                             {this.props.teamUsers.length > 0 ? this.props.teamUsers.map((dev,index)=>(
                                 <MemberCard checkbox="visible" checkboxName="assignedDevs" key={dev.id} dev={dev}/>
-                            )) : <JustAnmimation/>}
+                            )) : <JustAnimation/>}
                     </div>
 
                     <div className="comment--container--input u-margin-top-big">

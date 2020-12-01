@@ -19,10 +19,12 @@ import MyBugsDB from "./MyBugsDB";
 import {Redirect} from "react-router-dom";
 import Developers from "./developers";
 import ScrollToTop from "./scrollToTop";
-import Loading from "./Loading"
+import Loading from "./Loading";
+import {connect} from "react-redux";
 
 
-export default class Main extends Component{
+
+class Main extends Component{
     constructor(){
         super();
         this.linkClick = this.linkClick.bind(this);
@@ -114,7 +116,7 @@ export default class Main extends Component{
                     <img src={BackIcon} alt="" className="nav--icon" id="nav--close" onClick={this.closeNav} ref={this.navCloseRef}/>
                       <Link to="/" onClick={this.linkClick}><img className="nav__logo" src={btLogo} alt="logo"/></Link>
                       <Menu/>
-                      <BottomDiv ref={this.bottomDivRef}/>
+                      <BottomDiv ref={this.bottomDivRef} profile={this.props.profile}/>
                 </div>
                 
                 <div id="dashboard" ref={this.dashboardRef}>
@@ -199,3 +201,9 @@ export default class Main extends Component{
     }
 
 }
+
+const mapStateToProps = state=>({
+    profile: state.firebase.profile,
+})
+
+export default connect(mapStateToProps)(Main)

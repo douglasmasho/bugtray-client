@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import LoadingAnim from "../animations/loading.json";
 import lottie from "lottie-web";
 
-const JustAnmimation = () => {
+const JustAnimation = () => {
     const animContainerLoading = useRef(),
     animRefLoading = useRef(null);
 
@@ -21,4 +21,4 @@ const JustAnmimation = () => {
      );
 }
  
-export default JustAnmimation;
+export default JustAnimation;
