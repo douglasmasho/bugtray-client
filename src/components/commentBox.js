@@ -1,93 +1,82 @@
-import React, {Component, createRef} from "react";
+import React, {useEffect, useRef} from "react";
 import Button from "./button";
 import {nanoid} from "nanoid";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
 import Down from "../assets/arrow-down.svg"
+import { useCallback } from "react";
 
 
-class CommentBox extends Component{
-    constructor(){
-        super();
-        this.postComment = this.postComment.bind(this);
-    }
+const CommentBox =(props)=>{
+    const textAreaRef = useRef(),
+    downRef = useRef();
 
-    textAreaRef = createRef();
-    downRef = createRef()
+    const scrollListener = useCallback(()=>{
+     const element = document.querySelector("#dashboard");
 
-    componentDidUpdate(){
-        this.downRef.current.style.opacity = "1";
-    }
-
-    componentWillUnmount(){
-        const element = document.querySelector("#dashboard");
-        console.log("removed")
-        document.querySelector("#dashboard").removeEventListener("scroll", ()=>{
+        if(downRef.current){
             if(element.clientHeight + element.scrollTop === element.scrollHeight){
-                this.downRef.current.style.opacity = "0";
+                downRef.current.style.opacity = "0";
             }else{
-                this.downRef.current.style.opacity = "1";
+                downRef.current.style.opacity = "1";
             }
-        }, true)
-    }
+        }
+    })
+
+    
+    useEffect(()=>{
+        downRef.current.style.opacity = "1";
+    })
 
 
-
-    componentDidMount(){
-        this.textAreaRef.current.addEventListener('input', autoResize, false); 
+    useEffect(()=>{
+        textAreaRef.current.addEventListener('input', autoResize, false); 
         function autoResize() { 
         this.style.height = 'auto'; 
         this.style.height = this.scrollHeight + 'px'; 
-     } 
+      } 
 
      const element = document.querySelector("#dashboard");
-        this.downRef.current.style.opacity = "1";
-
-        if(document.querySelector("#dashboard")){
-            document.querySelector("#dashboard").addEventListener("scroll", ()=>{
-                if(this.downRef.current){
-                    if(element.clientHeight + element.scrollTop === element.scrollHeight){
-                        this.downRef.current.style.opacity = "0";
-                    }else{
-                        this.downRef.current.style.opacity = "1";
-                    }
-                }
-            },true)
+        downRef.current.style.opacity = "1"
+        element.addEventListener("scroll", scrollListener)
+        
+        return ()=>{
+            console.log("removed")
+            element.removeEventListener("scroll", scrollListener)
         }
-    }
+
+    }, [])
 
 
-    postComment(){
-        const {routeArgs} = this.props;
-        const comment = this.textAreaRef.current.value;
+    const postComment =()=>{
+        const {routeArgs} = props;
+        const comment = textAreaRef.current.value;
         const id = routeArgs.match.params.id;
-        this.textAreaRef.current.value = "";
-        this.textAreaRef.current.style.height = 'auto'; 
-
+        textAreaRef.current.value = "";
+        textAreaRef.current.style.height = 'auto'; 
         if(comment){
             const commentObj = {
                 comment,
                 commentID: nanoid(9),
-                authorID: this.props.auth.uid,
-                authorName: this.props.profile.name,
+                authorID: props.auth.uid,
+                authorName: props.profile.name,
                 timeStamp: new Date(),
             }
-            this.props.addComment(commentObj, id);
+            props.addComment(commentObj, id);
         }
     }
-    render(){
-        console.log(document.querySelector("#dashboard"))
+
         return (
             <div className="comment--container--input u-margin-top-big comment__bottom">
-                <textarea name="new-comment" id="new-comment" placeholder="add a comment" ref={this.textAreaRef}></textarea>
+                <textarea name="new-comment" id="new-comment" placeholder="add a comment" ref={textAreaRef}></textarea>
                 <Button name="Send" specClasses="button__green comment--button" callBack={()=>{
-                    this.postComment()
+                    postComment()
                 }}/>
-               <button className="comment--down" onClick={this.props.scrollToBottom} ref={this.downRef}><img src={Down} alt=""/></button>
+               <button className="comment--down" onClick={props.scrollToBottom} ref={downRef}><img src={Down} alt=""/></button>
             </div>
         )
-    }
+    
 }
 
 
