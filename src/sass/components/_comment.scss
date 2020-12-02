@@ -9,6 +9,10 @@
         -moz-box-shadow: 6px 4px 17px 1px rgba(0,0,0,0.39);
         box-shadow: 6px 4px 17px 1px rgba(0,0,0,0.39);
         margin-bottom: 11rem;
+        &:hover .comment--delete{
+            opacity: 1;
+            transform: scale(1.1);
+        }
 
         &--input{
             background-color: white;
@@ -53,6 +57,7 @@
     &--title,
     &--text{
         margin-left: 3rem;
+        white-space: pre-wrap;
         & p{
             width: 95%;
         }
@@ -80,4 +85,54 @@
         width: 80% !important;
         // border-radius: 5px;
     }
+
+    &--delete{
+        opacity: 0;
+        transition: all .3s;
+        width: 2rem;
+        cursor: pointer;
+        padding: 1rem;
+        border-radius: 50%;
+        position: absolute;
+        margin: 1rem 1rem 0 0;
+        top: 0;
+        right: 0;
+        background-color: red;
+
+
+        &:active{
+        background-color: black;
+        }
+    }
+
+    &--down{
+        position: absolute;
+        right: 0;
+        top: -10rem;
+        background-color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 50%;
+        transition: all .3s;
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        &:hover{
+            background-color: red;
+            transform: scale(1.1);
+        }
+        // margin-bottom: 2rem;
+    }
+
+
+}
+
+// .dvisible{
+//     opacity: 1;
+//     transform: scale(1);
+// }
+
+.dinvisible{
+    opacity: 0 !important;
+    transform: scale(0) !important;
 }

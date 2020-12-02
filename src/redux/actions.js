@@ -235,8 +235,7 @@ export const signUp = (newUser,type)=>{
                     })
                     default: //
             }
-        }).then(()=>{
-            
+        }).then(()=>{   
             dispatch({type: "SIGNUP_SUCCESS"});
             console.log("success! :)")
         }).catch(e=>{
@@ -487,20 +486,34 @@ export const deleteBug = (bugID)=>{
                         })
                     })
                 })
-            }).then(()=>{
-            //remove from Storage
-            //screenshots
+            }).catch((e)=>{
+             console.log(e)
             })
         })
 
         })
-
-
-
-
-
     }
 }
+
+
+export const deleteComment = (commentID, bugID)=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
+        const firestore = getFirestore();
+        //first get the comment object from firestore,
+        firestore.collection("comments").doc(bugID).get().then(doc=>{
+            const commentObj = doc.data().comments.find(com=>com.commentID === commentID);
+        ////then delete it
+             return firestore.collection("comments").doc(bugID).update({
+                 comments: firestore.FieldValue.arrayRemove(commentObj)
+             }).then(()=>{
+                 console.log("the comment has been deleted")
+             }).catch(e=>{
+                 console.log(e)
+             })
+        })
+    }
+}
+
 
 // }///do a getImage but for multiple users, instead of receiving a sgle UID, receive an array of UIDs, then forEach of the UIDs, get the profile pic urls, then push them into an array, Each item in the array will be an object, {UID,url}.
 // you can then dispatch this new array tot the reducer, where it becomes state. When reading the state in your application, Use the UIDs of the members to get the right URL from the array. 

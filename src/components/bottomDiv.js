@@ -22,7 +22,7 @@ const BottomDiv = React.forwardRef((props, ref)=>{
                     <h1 className="screen__header white-text">{props.profile.hasOwnProperty("teamID") ? props.profile.teamID : "loading"}</h1>
 
                     </div>
-                     <p className="white-text normal-text">To invite A developer Copy and send your team's ID above. They should use the ID when signing up to Bugtray</p>
+                     <p className="white-text normal-text">To invite a developer to your team, copy and send them your team's ID above. They should use the ID when signing up to Bugtray.</p>
                     </div>
            </div>
     ) 

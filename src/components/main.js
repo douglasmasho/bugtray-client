@@ -165,7 +165,7 @@ class Main extends Component{
                         if(!this.props.auth.uid){
                                      return <Redirect to="/"/>
                          }
-                       return   <CommentPage  {...this.props} routeArgs={routeArgs}  scrollToBottom={this.scrollToBottom}/>   
+                       return   <CommentPage  {...this.props} routeArgs={routeArgs}  scrollToBottom={this.scrollToBottom} dashbboardRef={this.dashboardRef}/>   
                     }
                     }/>
 
