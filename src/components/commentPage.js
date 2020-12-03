@@ -11,10 +11,7 @@ import JustAnimation from "./JustAnimation";
 
 class CommentPage extends Component{
 
-    // componentDidUpdate(prevProps, prevState){
-    //     this.props.scrollToBottom();
-    // }
-
+    
     render(){
         let {routeArgs} = this.props;
         let name = routeArgs.match.params.name;

@@ -6,6 +6,7 @@ import {firestoreConnect} from "react-redux-firebase";
 import {compose} from "redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
+import Down from "../assets/arrow-down.svg";
 
 
 
@@ -15,6 +16,8 @@ class ScreenshotsPage extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.addScreenshot = this.addScreenshot.bind(this);
         this.progressRef = React.createRef();
+
+        this.downRef = React.createRef();
     }
 
     state={
@@ -52,7 +55,30 @@ class ScreenshotsPage extends Component{
 
     componentDidMount(){
         mediumZoom('[data-zoomable]');
+
+        
+     const element = document.querySelector("#dashboard");
+     this.downRef.current.style.opacity = "1"
+     element.addEventListener("scroll", this.scrollListener)
     }
+
+    componentWillUnmount(){
+     const element = document.querySelector("#dashboard");
+        console.log("removed")
+        element.removeEventListener("scroll", this.scrollListener)
+    }
+
+    scrollListener = ()=>{
+        const element = document.querySelector("#dashboard");
+   
+           if(this.downRef.current){           
+                if(element.clientHeight + element.scrollTop === element.scrollHeight){
+                   this.downRef.current.style.opacity = "0";
+               }else{
+                   this.downRef.current.style.opacity = "1";
+               }
+           }
+       }
 
     componentDidUpdate(){
         this.progressRef.current.value = this.props.uploadPercentage;
@@ -61,7 +87,6 @@ class ScreenshotsPage extends Component{
                 this.progressRef.current.value = 0
             }, 2000)
         }
-        this.props.scrollToBottom()
     }
     
 
@@ -75,16 +100,21 @@ class ScreenshotsPage extends Component{
                   <h1 className="screen__header u-margin-bottom-big white-text">Screenshots</h1>
                    <h3 className="white-text normal-text u-margin-bottom-big">{name}-{id}</h3>
                    {
-                      screenshotsArr.map(screenshot=> (<Screenshot key={screenshot.screenshotID} authorName={screenshot.authorName} timeStamp={screenshot.timeStamp} notes={screenshot.notes} screenshot={screenshot.screenshotSrc} authorPic={screenshot.authorPic}/>))
+                      screenshotsArr.map(screenshot=> (<Screenshot key={screenshot.screenshotID} authorName={screenshot.authorName} timeStamp={screenshot.timeStamp} notes={screenshot.notes} screenshot={screenshot.screenshotSrc} authorPic={screenshot.authorPic} authorID={screenshot.authorID} uid={this.props.auth.uid} bugID={id} screenshotID={screenshot.screenshotID}/>))
                    }
-                   <div className="screenshot--upload-div">
-                       <form action="" className="screenshot--upload-form" onSubmit={this.addScreenshot}>
-                            <input type="file" onChange={this.handleChange} id="file" required/>
-                            <input type="text"  placeholder="notes" onChange={this.handleChange} required id="notes"/>
-                            <button type="submit">Submit</button>
+
+                   <div className="screenshot--upload">
+                       <form onSubmit={this.addScreenshot}>
+                            <input type="file" onChange={this.handleChange} id="file" required className="screenshot--file u-margin-bottom"/>
+                            <textarea type="text"  placeholder="notes" onChange={this.handleChange} required id="notes" className="screenshot--notes"></textarea>
+                            <div className="row">
+                                <button type="submit" className="button button__green">Submit</button>
+                                <progress value="0" max="100" id="uploader" ref={this.progressRef} className="screenshot--progress"></progress>
+                            </div>
                        </form>
-                       <progress value="0" max="100" id="uploader" ref={this.progressRef}></progress>
+                       <button className="comment--down" onClick={this.props.scrollToBottom} ref={this.downRef}><img src={Down} alt=""/></button>
                    </div>
+
                </div>)
     }
 }

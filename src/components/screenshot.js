@@ -1,24 +1,41 @@
-import React, {Component} from "react";
+import React, {} from "react";
 import moment from "moment";
+import Bin from "../assets/trash.svg";
+import {connect} from "react-redux";
+import * as actionCreators from "../redux/actions";
+import {bindActionCreators} from "redux";
 
 import {Magnifier} from "react-image-magnifiers";
 
 
 
-export default class Screenshot extends Component{
-    render(){
+const Screenshot =(props)=>{
+
+
+
+
+   const  deleteScreenshot =(e)=>{
+        props.deleteScreenshot(props.screenshotID, props.bugID)
+    }
+
         return(
             <div className="screenshot--container">
-            {/* <img src={this.props.authorPic} alt="user" className="screenshot--pic"/> */}
-            <div className="screenshot--pic" style={{backgroundImage: `url(${this.props.authorPic})`}}></div>
-            <p className="screenshot--title">{this.props.authorName} | <span>{moment(this.props.timeStamp.toDate()).calendar()}</span></p>
+            {/* <img src={props.authorPic} alt="user" className="screenshot--pic"/> */}
+            <div className="screenshot--pic" style={{backgroundImage: `url(${props.authorPic})`}}></div>
+            <div className="screenshot--title">{props.authorName} | <span>{moment(props.timeStamp.toDate()).calendar()}</span>{props.uid === props.authorID ? <img src={Bin} alt="trash" className="screenshot--delete"  onClick={deleteScreenshot}/> : null}</div>
              <div className="center-hrz">
-              <Magnifier imageSrc={this.props.screenshot} imageAlt="" style={{width: "80%"}} dragToMove={false}/>
+              <Magnifier imageSrc={props.screenshot} imageAlt="" style={{width: "80%"}} dragToMove={false}/>
              </div>
-            {/* <img src={this.props.screenshot} alt="" data-zoomable className="screenshot--screenshot u-margin-bottom img-zoomable"/> */}
-            <p className="screenshot--note">Notes:<br></br>{this.props.notes}</p>
-
+            {/* <img src={props.screenshot} alt="" data-zoomable className="screenshot--screenshot u-margin-bottom img-zoomable"/> */}
+              <p className="screenshot--note">Notes:<br></br>{props.notes}</p>
             </div>
         )
-    }
+
 }
+
+
+const mapDispatchToProps =(dispatch)=>{
+    return bindActionCreators(actionCreators, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(Screenshot)

@@ -4,7 +4,7 @@ import {nanoid} from "nanoid";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-import Down from "../assets/arrow-down.svg"
+import Down from "../assets/arrow-down.svg";
 import { useCallback } from "react";
 
 
@@ -15,14 +15,13 @@ const CommentBox =(props)=>{
     const scrollListener = useCallback(()=>{
      const element = document.querySelector("#dashboard");
 
-        if(downRef.current){
-            if(element.clientHeight + element.scrollTop === element.scrollHeight){
+        if(downRef.current){            if(element.clientHeight + element.scrollTop === element.scrollHeight){
                 downRef.current.style.opacity = "0";
             }else{
                 downRef.current.style.opacity = "1";
             }
         }
-    })
+    }, [])
 
     
     useEffect(()=>{

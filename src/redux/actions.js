@@ -515,5 +515,29 @@ export const deleteComment = (commentID, bugID)=>{
 }
 
 
+
+export const deleteScreenshot = (screenshotID, bugID)=>{
+    return (dispatch, getState, {getFirebase, getFirestore})=>{
+        const firebase = getFirebase();
+        const firestore = getFirestore();
+        //delete the screenshot from firebase storage
+        // firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).delete().then(()=>{
+        //     console.log("the screenshot has been deleted")
+        // })
+        //get the screenshot object form firestore
+        firestore.collection("screenshots").doc(bugID).get().then(doc=>{
+            const screenshotObj = doc.data().screenshots.find(scree=>scree.screenshotID === screenshotID);
+            console.log(screenshotObj);
+            firestore.collection("screenshots").doc(bugID).update({
+                screenshots: firestore.FieldValue.arrayRemove(screenshotObj)
+            }).then(()=>{
+                console.log("the screenshot object has been removed")
+            }).catch(e=>{
+                console.log(e)
+            })
+        })
+    }
+}
+
 // }///do a getImage but for multiple users, instead of receiving a sgle UID, receive an array of UIDs, then forEach of the UIDs, get the profile pic urls, then push them into an array, Each item in the array will be an object, {UID,url}.
 // you can then dispatch this new array tot the reducer, where it becomes state. When reading the state in your application, Use the UIDs of the members to get the right URL from the array. 
