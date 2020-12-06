@@ -4,6 +4,9 @@
 ## Description
 A Bug tracking Application.
 
+## Demo
+Check out the demo [here](https://bugtray-b4725.firebaseapp.com/)
+
 ## Important
 This is the client-side, the server side of the application is needed to run this. The server side code can be found [here](https://github.com/douglasmasho/bugtray-server).
 

@@ -1,8 +1,8 @@
 import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
-const socket = io.connect("/");
+// const socket = io.connect("/");
 
 export function addComment(commentObj, bugID){
     return (dispatch, getState, {getFirebase, getFirestore})=>{
@@ -106,7 +106,7 @@ export const addBug =(bug, xtra)=>{
             
             bugID = docRef.id;
             const commentID = nanoid(9)
-            socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
+            // socket.emit("email_devs", {...bug, bugID, initComment: xtra.initComment});
             return firestore.collection("comments").doc(docRef.id).set({
                 comments: [{
                     authorID: xtra.uid,

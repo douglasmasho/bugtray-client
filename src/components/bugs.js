@@ -8,7 +8,7 @@ import Eye from "../assets/eye.svg";
 export default class Bugs extends Component{
 
     render(){
-    let {name, id, deadLine, title, status} = this.props.bugObj;
+    let {name, id, deadLine, title, status, createdAt} = this.props.bugObj;
     let formattedDate = deadLine;
     
         return (

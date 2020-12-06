@@ -34,9 +34,8 @@ const AllBugsDB = (props) => {
         <Link to="/addBug"> <Button name="Add Bug" specClasses="u-margin-bottom button__green"/> </Link> 
         </div>  
             <BugsHeader/>
-        {/* the components(array) that represent individual bugs will come here. */}
         <div>
-            {props.teamBugs.map((bug, index)=>(
+            {props.teamBugs.sort((a,b)=>b.createdAt.valueOf() - a.createdAt.valueOf()).map((bug, index)=>(
                 <Bugs bugObj={bug} key={bug.id}/>
             ))}
         </div>
@@ -52,7 +51,7 @@ const mapDispatchToProps = dispatch=>{
 
 const mapStateToProps = state=>{
     return {
-        bugs: state.firestore.data.bugs,
+        // bugs: state.firestore.data.bugs,
         auth: state.firebase.auth,
         profile: state.firebase.profile,
         teamBugs: state.teamBugs
@@ -62,6 +61,8 @@ const mapStateToProps = state=>{
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    firestoreConnect(()=>["bugs"])
+    // firestoreConnect(()=>[
+    //     {collection: "bugs", orderBy: ["createdAt", "desc"]}
+    // ])
 )(AllBugsDB);
 //true means that it will not re-render

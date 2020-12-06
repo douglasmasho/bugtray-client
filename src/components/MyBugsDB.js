@@ -25,9 +25,11 @@ const MyBugsDB = (props) => {
             <div className="center-hrz">
                <h1 className="screen__header u-margin-bottom white-text">My bugs</h1>
             </div>
-            <BugsHeader/>
-    {props.myBugs  ? props.myBugs[0].projectArr.map(bug=>{
-        return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>}
+            <BugsHeader/>                        
+    {props.myBugs && props.myBugs[0].projectArr.length >=1 ?  props.myBugs[0].projectArr.map(obj=>obj).sort((a,b)=>b.createdAt.valueOf() - a.createdAt.valueOf()).map(bug=>{
+        return <Bugs bugObj={bug} key={bug.id}/>}) : <p>Loading...</p>
+    }
+
         </div>
      );
 }
