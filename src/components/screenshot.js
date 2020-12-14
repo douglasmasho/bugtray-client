@@ -6,13 +6,11 @@ import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
 
 import {Magnifier} from "react-image-magnifiers";
+import { useEffect } from "react";
 
 
 
-const Screenshot =(props)=>{
-
-
-
+const Screenshot =React.memo((props)=>{
 
    const  deleteScreenshot =(e)=>{
         props.deleteScreenshot(props.screenshotID, props.bugID)
@@ -31,7 +29,7 @@ const Screenshot =(props)=>{
             </div>
         )
 
-}
+})
 
 
 const mapDispatchToProps =(dispatch)=>{

@@ -13,8 +13,7 @@ import {ReactReduxFirebaseProvider, getFirebase, isLoaded} from "react-redux-fir
 import fbConfig from "./config/fbConfig";
 import firebase from "firebase/app";
 import {useSelector} from "react-redux";
-import Loading from "./components/Loading"
-
+import Loading from "./components/Loading";
 const store = createStore(rootReducer, compose(
     applyMiddleware(thunk.withExtraArgument({getFirebase, getFirestore})),
     reduxFirestore(fbConfig)
@@ -57,5 +56,3 @@ ReactDOM.render(
          </ReactReduxFirebaseProvider>
     </Provider>,
      document.getElementById("root"));
-
-

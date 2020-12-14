@@ -1,6 +1,7 @@
-import React, {Component} from "react";
+import React, {PureComponent} from "react";
 
- class MemberCard extends Component{
+ class MemberCard extends PureComponent{
+
     render(){
         return(
             <div className="memberCard u-margin-bottom-big" data-userobj={this.props.dev}>
