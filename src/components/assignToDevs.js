@@ -62,7 +62,6 @@ const AssignToDevs = props=>{
             if(profile.teamID && props.teamUsers.length === 0){
                 props.getTeamUsers(profile.teamID)
             }
-
         },[profile])
 
         return (

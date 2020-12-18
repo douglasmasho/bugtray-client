@@ -9,7 +9,7 @@ import {compose} from "redux";
 import {Redirect} from "react-router-dom";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-
+import JustAnimation from './JustAnimation';
 
 
 const AllBugsDB = (props) => {
@@ -17,10 +17,11 @@ const AllBugsDB = (props) => {
 
 
     useEffect(()=>{
-        if(profile.teamID){
-            props.getTeamBugs(profile.teamID);
-        }
+        // if(profile.teamID ){
+        //     props.getTeamBugs(profile.teamID);
+        // }
     }, [profile])
+
 
     if(!props.auth.uid){
         return <Redirect to="/"/>
@@ -35,9 +36,9 @@ const AllBugsDB = (props) => {
         </div>  
             <BugsHeader/>
         <div>
-            {props.teamBugs.sort((a,b)=>b.createdAt.valueOf() - a.createdAt.valueOf()).map((bug, index)=>(
+            {props.bugs ? props.bugs.length >= 1 ? props.bugs.map(obj=>obj).sort((a,b)=>b.createdAt.valueOf() - a.createdAt.valueOf()).map((bug, index)=>(
                 <Bugs bugObj={bug} key={bug.id}/>
-            ))}
+            )) : <p className="normal-text white-text">No data</p> : <JustAnimation/>}
         </div>
         <div className="center-hrz">
         </div>  
@@ -51,7 +52,7 @@ const mapDispatchToProps = dispatch=>{
 
 const mapStateToProps = state=>{
     return {
-        // bugs: state.firestore.data.bugs,
+        bugs: state.firestore.ordered.bugs,
         auth: state.firebase.auth,
         profile: state.firebase.profile,
         teamBugs: state.teamBugs
@@ -61,8 +62,14 @@ const mapStateToProps = state=>{
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-    // firestoreConnect(()=>[
-    //     {collection: "bugs", orderBy: ["createdAt", "desc"]}
-    // ])
+    firestoreConnect(({profile})=>{
+        if(profile.teamID){
+            return [
+            {collection: "bugs", where: [["teamID", "==", profile.teamID]]}
+            ]
+        }else{
+            return [{collection: "empty"}]
+        }
+
+    })
 )(AllBugsDB);
-//true means that it will not re-render

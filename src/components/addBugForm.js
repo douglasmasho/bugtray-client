@@ -11,7 +11,7 @@ import JustAnimation from "./JustAnimation";
 
 
 
-class AddBugForm extends Component{
+class AddBugForm extends React.PureComponent{
     constructor(){
         super();
         this.addBug = this.addBug.bind(this);

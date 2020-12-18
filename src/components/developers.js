@@ -8,8 +8,6 @@ import {bindActionCreators} from "redux";
 import MemberCard from "./memberCard";
 import JustAnimation from './JustAnimation';
 
-
-
 const Developers = (props) => {
     const {profile} = props;
 

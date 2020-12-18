@@ -153,15 +153,10 @@ class HomePage extends Component{
             this.props.getImage(this.props.auth.uid);
         }
 
-        // if(prevProps.imageUpload !== this.props.imageUpload){
-
-        // }
-
     }
 
     uploadDecoy(){
         this.uploadPicRef.current.click();
-
     }
    
     render(){

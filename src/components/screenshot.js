@@ -4,13 +4,12 @@ import Bin from "../assets/trash.svg";
 import {connect} from "react-redux";
 import * as actionCreators from "../redux/actions";
 import {bindActionCreators} from "redux";
-
 import {Magnifier} from "react-image-magnifiers";
 import { useEffect } from "react";
 
 
 
-const Screenshot =React.memo((props)=>{
+const Screenshot = React.memo((props)=>{
 
    const  deleteScreenshot =(e)=>{
         props.deleteScreenshot(props.screenshotID, props.bugID)
@@ -24,7 +23,6 @@ const Screenshot =React.memo((props)=>{
              <div className="center-hrz">
               <Magnifier imageSrc={props.screenshot} imageAlt="" style={{width: "80%"}} dragToMove={false}/>
              </div>
-            {/* <img src={props.screenshot} alt="" data-zoomable className="screenshot--screenshot u-margin-bottom img-zoomable"/> */}
               <p className="screenshot--note">Notes:<br></br>{props.notes}</p>
             </div>
         )

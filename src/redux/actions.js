@@ -1,5 +1,6 @@
 import UserIcon from "../assets/profile.jpg";
 import {nanoid} from "nanoid";
+import imageCompression from "browser-image-compression";
 // import io from "socket.io-client";
 
 // const socket = io.connect("/");
@@ -22,6 +23,7 @@ export function addComment(commentObj, bugID){
     }
 }
 
+///here
 export function addScreenshot(screenshotObj, bugID, screenshotFile){
     return (dispatch, getState, {getFirebase, getFirestore}) =>{
         const firestore = getFirestore();
@@ -29,8 +31,22 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
         const screenshotID = nanoid(12);
         let screenshotSrc;
         //first upload the screenshot to firebase storage
-        const uploadTask = firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile);
+        ///compress the screenshot file
+        console.log(`Original file instance of blob =>${screenshotFile instanceof Blob}`);
+        console.log(`Original file size =>${screenshotFile.size /1024/1024} MB`);
 
+        const options = {
+            maxSizeMB: 0.2,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+          }
+
+          imageCompression(screenshotFile, options).then(resp=>{
+              console.log(resp);
+              console.log(`Compressed file instance of blob =>${resp instanceof Blob}`);
+              console.log(`Compressed file size =>${resp.size /1024/1024} MB`);
+
+       const uploadTask = firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).put(screenshotFile);
         uploadTask.on("state_changed", snapshot=>{
             let percentage = (snapshot.bytesTransferred/snapshot.totalBytes) * 100;
     
@@ -39,10 +55,10 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
                 percentage
             })
          });
-
-        uploadTask.then((resp)=>{ 
          
-            return firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL()
+
+        uploadTask.then((resp)=>{    
+         return firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).getDownloadURL()
         }).then(resp=>{
             screenshotSrc = resp;
             
@@ -62,6 +78,10 @@ export function addScreenshot(screenshotObj, bugID, screenshotFile){
         .catch(e=>{
             console.log(e)
         })
+     }).catch(e=>console.log(e))
+
+
+
 
     }
     
@@ -193,7 +213,7 @@ export const signOut = ()=>{
     }
 }
 
-
+//here
 export const signUp = (newUser,type)=>{
     let uid;
     return (dispatch, getState, {getFirestore, getFirebase})=>{
@@ -214,9 +234,23 @@ export const signUp = (newUser,type)=>{
             fetch(UserIcon).then(resp=>{
                 return resp.blob()
             }).then(blob=>{
-                return firebase.storage().ref(`users/${uid}/profile.jpg`).put(blob).then((resp)=>{
-                    dispatch({type: "UPLOAD_SUCCESS"})
-                })  
+                console.log(`Original file instance of blob =>${blob instanceof Blob}`);
+                console.log(`Original file size =>${blob.size /1024/1024} MB`);
+        
+                const options = {
+                    maxSizeMB: 0.2,
+                    maxWidthOrHeight: 1920,
+                    useWebWorker: true
+                  }
+
+                 return imageCompression(blob, options).then(resp=>{
+                    console.log(`Compressed file instance of blob =>${resp instanceof Blob}`);
+                    console.log(`Compressed file size =>${resp.size /1024/1024} MB`);
+                    return firebase.storage().ref(`users/${uid}/profile.jpg`).put(resp).then(()=>{
+                        dispatch({type: "UPLOAD_SUCCESS"})
+                    }) 
+                  })
+ 
             })
         }).then(()=>{
             
@@ -237,7 +271,8 @@ export const signUp = (newUser,type)=>{
             }
         }).then(()=>{   
             dispatch({type: "SIGNUP_SUCCESS"});
-            console.log("success! :)")
+            // console.log("success! :)")
+            window.location.reload();
         }).catch(e=>{
             dispatch({type: "SIGNUP_ERROR",e});
             console.log(e)
@@ -246,20 +281,33 @@ export const signUp = (newUser,type)=>{
     }
 }
 
+///here
 export const uploadPic = ({file, uid})=>{
     return (dispatch, getState, {getFirebase, getFirestore})=>{
         const firebase = getFirebase();
-        firebase.storage().ref(`users/${uid}/profile.jpg`).put(file).then((resp)=>{
-            dispatch({type: "UPLOAD_SUCCESS"})
-            window.location.reload();
-        }).catch((e)=>{
+        console.log(`Original file instance of blob =>${file instanceof Blob}`);
+        console.log(`Original file size =>${file.size /1024/1024} MB`);
+        const options = {
+            maxSizeMB: 0.2,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+          }
+        imageCompression(file, options).then(resp=>{
+
+           return firebase.storage().ref(`users/${uid}/profile.jpg`).put(resp).then(()=>{
+                dispatch({type: "UPLOAD_SUCCESS"})
+                window.location.reload();
+            })
+        }).catch(e=>{
             console.log(e)
         })
+
     }
 }
 
 export const getImage = (uid)=>{ /////////////////////////////////////////////////////////////////////////////////////
     return (dispatch, getState, {getFirebase, getFirestore})=>{
+        console.log("got image")
         const firebase = getFirebase();
         firebase.storage().ref(`users/${uid}/profile.jpg`).getDownloadURL().then(resp=>{
             dispatch({type: "URL_SUCCESS", url: resp})
@@ -268,34 +316,34 @@ export const getImage = (uid)=>{ ///////////////////////////////////////////////
 }
 
 
-export const getTeamBugs = (teamID)=>{
-    return (dispatch, getState, {getFirestore})=>{
-        const firestore = getFirestore();
-        let teamBugs = [];
+// export const getTeamBugs = (teamID)=>{
+//     return (dispatch, getState, {getFirestore})=>{
+//         console.log("got them")
+//         const firestore = getFirestore();
+//         let teamBugs = [];
        
-        firestore.collection("bugs").where("teamID", "==", teamID).get().then(querySnapshot=>{
-            querySnapshot.forEach(doc=>{
+//         firestore.collection("bugs").where("teamID", "==", teamID).get().then(querySnapshot=>{
+//             querySnapshot.forEach(doc=>{
                
-                teamBugs.push({
-                    ...doc.data(),
-                    id: doc.id
-                })
-            })
-        }).then(()=>{
-            
-            dispatch({type: "GET_TEAMBUGS", teamBugs})
-        }).catch(e=>{
-            console.log(e);
-        })
-    }
-}
+//                 teamBugs.push({
+//                     ...doc.data(),
+//                     id: doc.id
+//                 })
+//             })
+//         }).then(()=>{
+//             dispatch({type: "GET_TEAMBUGS", teamBugs})
+//         }).catch(e=>{
+//             console.log(e);
+//         })
+//     }
+// }
 
 
 export const getTeamUsers = (teamID)=>{
     let teamUsers = [];
     return (dispatch, getState, {getFirebase,getFirestore})=>{
-                        const firestore = getFirestore();
-                        const firebase = getFirebase();
+         const firestore = getFirestore();
+         const firebase = getFirebase();
         firestore.collection("users").where("teamID", "==", teamID).get().then(querySnapshot=>{     
             querySnapshot.docs.forEach((doc,index)=>{
                 return firebase.storage().ref(`users/${doc.id}/profile.jpg`).getDownloadURL().then(resp=>{
@@ -521,9 +569,9 @@ export const deleteScreenshot = (screenshotID, bugID)=>{
         const firebase = getFirebase();
         const firestore = getFirestore();
         //delete the screenshot from firebase storage
-        // firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).delete().then(()=>{
-        //     console.log("the screenshot has been deleted")
-        // })
+        firebase.storage().ref(`screenshots/${bugID}/${screenshotID}.jpg`).delete().then(()=>{
+            console.log("the screenshot has been deleted")
+        })
         //get the screenshot object form firestore
         firestore.collection("screenshots").doc(bugID).get().then(doc=>{
             const screenshotObj = doc.data().screenshots.find(scree=>scree.screenshotID === screenshotID);

@@ -54,7 +54,6 @@ class ScreenshotsPage extends Component{
     }
 
     componentDidMount(){
-        mediumZoom('[data-zoomable]');
 
         
      const element = document.querySelector("#dashboard");

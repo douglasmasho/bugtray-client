@@ -4,24 +4,23 @@ import {Link} from "react-router-dom"
 import btLogo  from "../assets/btlogo.svg";
 import Menu from "./menu";
 import BottomDiv from "./bottomDiv";
-import AddBugForm from "./addBugForm";
-import ManageBug from "./manageBug";
-import AssignToDevs from "./assignToDevs";
-import AssignedDevs from "./assignedDevs";
-import CommentPage from "./commentPage";
 import MenuIcon from "../assets/menu.svg";
 import BackIcon from "../assets/back.svg"
-import ScreenshotsPage from "./screenshotsPage";
-import HomePage from "./homePage";
-import ChangeStatus from "./changeStatus";
-import AllBugsDB from "./AllBugsDB";
-import MyBugsDB from "./MyBugsDB";
 import {Redirect} from "react-router-dom";
-import Developers from "./developers";
 import ScrollToTop from "./scrollToTop";
 import Loading from "./Loading";
 import {connect} from "react-redux";
-
+const CommentPage = React.lazy(()=>import("./commentPage")),
+      HomePage = React.lazy(()=>import("./homePage")),
+      AllBugsDB = React.lazy(()=>import("./AllBugsDB")),
+      MyBugsDB = React.lazy(()=>import("./MyBugsDB")),
+      Developers = React.lazy(()=>import("./developers")),
+      AddBugForm = React.lazy(()=>import("./addBugForm")),
+      ManageBug = React.lazy(()=>import("./manageBug")),
+      AssignedDevs = React.lazy(()=>import("./assignedDevs")),
+      AssignToDevs = React.lazy(()=>import("./assignToDevs")),
+      ChangeStatus = React.lazy(()=>import("./changeStatus")),
+      ScreenshotsPage = React.lazy(()=>import("./screenshotsPage"));
 
 
 class Main extends Component{
@@ -123,18 +122,17 @@ class Main extends Component{
                 <img src={MenuIcon} className="nav--icon" id="nav--open" alt="" onClick={this.expandNav}/>
 
 
+                <React.Suspense fallback={<p>Loading...</p>}>
                     <Route exact path="/" render={()=>(
                         <HomePage/>
-                    )}/> 
+                    )}/>             
+                    <Route path="/allBugs" component={AllBugsDB}/>  
 
-                    
-                    <Route exact path="/allBugs" component={AllBugsDB}/>  
+                     <Route path="/myBugs" component={MyBugsDB}/> 
 
-                     <Route exact path="/myBugs" component={MyBugsDB}/> 
+                    <Route path="/developers" component={Developers}/>
 
-                    <Route exact path="/developers" component={Developers}/>
-
-                    <Route extact path="/addBug" render={({history})=>{
+                    <Route path="/addBug" render={({history})=>{
                         if(!this.props.auth.uid){
                                 return <Redirect to="/"/>
                          }
@@ -144,7 +142,7 @@ class Main extends Component{
                     </div>)
                     }}/>
 
-                    <Route exact path="/manageBug/:name/:id" render={(routeArgs)=>{
+                    <Route  path="/manageBug/:name/:id" render={(routeArgs)=>{
                         if(!this.props.auth.uid){
                                  return <Redirect to="/"/>
                         }
@@ -153,7 +151,7 @@ class Main extends Component{
                     }/>
 
 
-                    <Route exact path="/assignedDevs/:name?/:id?" render={(routeArgs)=>{
+                    <Route  path="/assignedDevs/:name?/:id?" render={(routeArgs)=>{
                          if(!this.props.auth.uid){
                                      return <Redirect to="/"/>
                             }
@@ -161,15 +159,17 @@ class Main extends Component{
                     }
                     }/>
 
-                    <Route exact path="/comments/:name?/:id?" render={(routeArgs)=>{
+                    <Route  path="/comments/:name?/:id?" render={(routeArgs)=>{
                         if(!this.props.auth.uid){
                                      return <Redirect to="/"/>
                          }
-                       return   <CommentPage  {...this.props} routeArgs={routeArgs}  scrollToBottom={this.scrollToBottom} dashbboardRef={this.dashboardRef}/>   
+                       return   (
+                               <CommentPage  {...this.props} routeArgs={routeArgs}  scrollToBottom={this.scrollToBottom} dashbboardRef={this.dashboardRef}/>       
+                       )   
                     }
                     }/>
 
-                    <Route exact path="/assignToDevs/:name/:id" render={(routeArgs)=>{
+                    <Route  path="/assignToDevs/:name/:id" render={(routeArgs)=>{
                         if(!this.props.auth.uid){
                             return <Redirect to="/"/>
                        }
@@ -177,7 +177,7 @@ class Main extends Component{
                     }
                     }/>
 
-                    <Route exact path="/changeStatus/:name/:id" render={(routeArgs)=>{
+                    <Route  path="/changeStatus/:name/:id" render={(routeArgs)=>{
                             if(!this.props.auth.uid){
                                     return <Redirect to="/"/>
                              } 
@@ -185,15 +185,15 @@ class Main extends Component{
                     }
                     }/>
 
-                   <Route exact path="/screenshots/:name/:id" render={(routeArgs)=>{
+                   <Route  path="/screenshots/:name/:id" render={(routeArgs)=>{
                             if(!this.props.auth.uid){
                                  return <Redirect to="/"/>
                              } 
                         return  <ScreenshotsPage routeArgs={routeArgs} scrollToBottom={this.scrollToBottom}/>
                    }
                     }/>
-
-                    <Route exact path="/loading" component={Loading}/>
+                    <Route  path="/loading" component={Loading}/>
+                 </React.Suspense>
                 </div>
                 </div>
 
