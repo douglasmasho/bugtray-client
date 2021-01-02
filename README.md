@@ -1,4 +1,4 @@
-# Bugtray (WIP)
+# Bugtray
 ![Banner](./bugtray.jpg)
 
 ## Description
