@@ -2,7 +2,13 @@
 ![Banner](./bugtray.jpg)
 
 ## Description
-A Bug tracking Application.
+Bugtray is a bug tracking application. A platform where teams can track the status of bugs/issues during the development process.
+
+Features include:
+Creating bugs and assigning to developers.
+Developer can create teams(organizations) and share bugs within the teams.
+Chats where developers can discuss issues using messages and screenshots.
+Developers can check and edit the status of a bug as well as delete bugs when they are resolved.
 
 ## Demo
 Check out the demo [here](https://bugtray-b4725.firebaseapp.com/)
