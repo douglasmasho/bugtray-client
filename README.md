@@ -13,6 +13,13 @@ Developers can check and edit the status of a bug as well as delete bugs when th
 ## Demo
 Check out the demo [here](https://bugtray-b4725.firebaseapp.com/)
 
+## How to use Bugtray
+Sign up, you can either create your own team, or join an existing team, by inputting the code.
+The home route is where you can see your dashboard and manage your bugs.
+The account route is where you can edit your account details.
+Add bug by pressing the green button on the dashboard.
+you can invite a developer to your team by sending them your team code. yo can get this code by pressing on the ```Invite``` button on the bottom of the navigation pane.
+
 ## Important
 This is the client-side, the server side of the application is needed to run this. The server side code can be found [here](https://github.com/douglasmasho/bugtray-server).
 
